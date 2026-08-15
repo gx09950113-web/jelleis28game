@@ -1,0 +1,1097 @@
+/*
+========================================
+28 GAME LAB
+rules.css
+========================================
+*/
+
+
+body {
+  margin: 0;
+
+  min-height: 100vh;
+
+  color: #f5f7fb;
+
+  background:
+    linear-gradient(
+      rgba(6, 11, 20, 0.78),
+      rgba(6, 11, 20, 0.96)
+    ),
+    url("../assets/images/rules-bg.webp");
+
+  background-size: cover;
+
+  background-position: center;
+
+  background-attachment: fixed;
+}
+
+
+.rules-app {
+  width: min(
+    1180px,
+    calc(100% - 30px)
+  );
+
+  margin: 0 auto;
+
+  padding: 22px 0 48px;
+}
+
+
+/* ========================================
+   Header
+======================================== */
+
+.rules-header {
+  min-height: 72px;
+
+  padding: 12px 16px;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    auto
+    1fr;
+
+  align-items: center;
+
+  gap: 16px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.10
+    );
+
+  border-radius: 17px;
+
+  background:
+    rgba(
+      11,
+      17,
+      29,
+      0.88
+    );
+
+  backdrop-filter: blur(14px);
+}
+
+
+.rules-title {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+}
+
+
+.rules-title img {
+  width: 32px;
+
+  height: 32px;
+}
+
+
+.rules-title h1 {
+  margin: 0;
+
+  font-size: 20px;
+}
+
+
+.rules-title p {
+  margin: 2px 0 0;
+
+  color: #929cad;
+
+  font-size: 10px;
+}
+
+
+.rules-header > :last-child {
+  justify-self: end;
+}
+
+
+.icon-button {
+  min-height: 44px;
+
+  padding: 10px 13px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.10
+    );
+
+  border-radius: 11px;
+
+  color: #f2f4f8;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.05
+    );
+
+  cursor: pointer;
+}
+
+
+.icon-button img {
+  width: 20px;
+
+  height: 20px;
+}
+
+
+.sound-button {
+  width: 44px;
+
+  padding: 10px;
+}
+
+
+/* ========================================
+   Hero
+======================================== */
+
+.rules-hero {
+  min-height: 250px;
+
+  margin-top: 20px;
+
+  padding: 32px;
+
+  display: flex;
+
+  align-items: center;
+
+  border-radius: 20px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.10
+    );
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(8, 14, 26, 0.95),
+      rgba(8, 14, 26, 0.45)
+    );
+}
+
+
+.rules-hero-content {
+  max-width: 630px;
+}
+
+
+.hero-label {
+  color: #93c5fd;
+
+  font-size: 11px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.10em;
+}
+
+
+.rules-hero h2 {
+  margin: 10px 0 0;
+
+  font-size: clamp(
+    30px,
+    5vw,
+    45px
+  );
+
+  font-weight: 900;
+}
+
+
+.rules-hero p {
+  margin: 14px 0 0;
+
+  color: #aeb7c5;
+
+  line-height: 1.7;
+}
+
+
+/* ========================================
+   Navigation
+======================================== */
+
+.rules-nav {
+  position: sticky;
+
+  top: 10px;
+
+  z-index: 50;
+
+  margin-top: 18px;
+
+  padding: 8px;
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
+
+  border-radius: 13px;
+
+  background:
+    rgba(
+      12,
+      18,
+      31,
+      0.92
+    );
+
+  backdrop-filter: blur(12px);
+}
+
+
+.rules-nav-button {
+  padding: 9px 13px;
+
+  border: 0;
+
+  border-radius: 9px;
+
+  color: #adb6c4;
+
+  background: transparent;
+
+  cursor: pointer;
+}
+
+
+.rules-nav-button:hover,
+.rules-nav-button.active {
+  color: #ffffff;
+
+  background:
+    rgba(
+      96,
+      165,
+      250,
+      0.14
+    );
+}
+
+
+/* ========================================
+   Content
+======================================== */
+
+.rules-content {
+  margin-top: 18px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+
+.rule-section {
+  padding: 26px;
+
+  scroll-margin-top: 90px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.09
+    );
+
+  border-radius: 18px;
+
+  background:
+    rgba(
+      14,
+      21,
+      35,
+      0.90
+    );
+}
+
+
+/* ========================================
+   Headings
+======================================== */
+
+.section-heading {
+  margin-bottom: 22px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+}
+
+
+.section-number {
+  color: #60a5fa;
+
+  font-size: 26px;
+
+  font-weight: 900;
+}
+
+
+.section-heading h2 {
+  margin: 0;
+
+  font-size: 22px;
+}
+
+
+.section-heading p {
+  margin: 4px 0 0;
+
+  color: #909aaa;
+
+  font-size: 12px;
+}
+
+
+.subheading {
+  margin: 27px 0 13px;
+
+  font-size: 16px;
+}
+
+
+.rule-text {
+  color: #adb6c5;
+
+  line-height: 1.75;
+}
+
+
+/* ========================================
+   Example draw
+======================================== */
+
+.example-draw {
+  margin: 25px 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  font-size: 23px;
+}
+
+
+.example-ball {
+  width: 60px;
+
+  height: 60px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      #405477,
+      #18243b
+    );
+
+  font-size: 23px;
+
+  font-weight: 900;
+}
+
+
+.example-draw strong {
+  color: #ffd966;
+
+  font-size: 30px;
+}
+
+
+/* ========================================
+   General cards
+======================================== */
+
+.rule-grid {
+  display: grid;
+
+  gap: 10px;
+}
+
+
+.four-columns {
+  grid-template-columns:
+    repeat(4, 1fr);
+}
+
+
+.rule-card {
+  min-height: 110px;
+
+  padding: 17px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
+
+  border-radius: 13px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.04
+    );
+
+  text-align: center;
+}
+
+
+.rule-card h3 {
+  margin: 0;
+
+  font-size: 22px;
+}
+
+
+.rule-card strong {
+  color: #aeb9ca;
+
+  font-size: 13px;
+}
+
+
+.small-card {
+  min-height: 70px;
+
+  font-weight: 800;
+}
+
+
+/* ========================================
+   Notes
+======================================== */
+
+.rule-note {
+  margin-top: 20px;
+
+  padding: 14px 16px;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  border-radius: 11px;
+
+  background:
+    rgba(
+      59,
+      130,
+      246,
+      0.09
+    );
+}
+
+
+.rule-note.warning {
+  background:
+    rgba(
+      245,
+      158,
+      11,
+      0.09
+    );
+}
+
+
+.rule-note img {
+  width: 18px;
+
+  margin-top: 2px;
+}
+
+
+.rule-note p {
+  margin: 0;
+
+  color: #aeb8c6;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+
+/* ========================================
+   Rooms
+======================================== */
+
+.room-rule-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 12px;
+}
+
+
+.room-rule-card {
+  padding: 19px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.09
+    );
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(45, 57, 80, 0.65),
+      rgba(23, 31, 47, 0.85)
+    );
+}
+
+
+.room-rule-multiplier {
+  color: #ffd966;
+
+  font-size: 28px;
+}
+
+
+.room-rule-card h3 {
+  margin: 9px 0 0;
+}
+
+
+.room-rule-card p {
+  color: #949eae;
+
+  font-size: 12px;
+}
+
+
+.rule-tags {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 6px;
+}
+
+
+.rule-tags span {
+  padding: 4px 7px;
+
+  border-radius: 999px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.07
+    );
+
+  color: #bec7d4;
+
+  font-size: 10px;
+}
+
+
+/* ========================================
+   Refund
+======================================== */
+
+.refund-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 10px;
+}
+
+
+.refund-card {
+  min-height: 110px;
+
+  padding: 16px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 8px;
+
+  border-radius: 13px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.04
+    );
+}
+
+
+.refund-card strong {
+  color: #facc15;
+
+  font-size: 24px;
+}
+
+
+.refund-card span {
+  color: #a8b2c0;
+
+  font-size: 12px;
+}
+
+
+/* ========================================
+   Economy
+======================================== */
+
+.economy-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 12px;
+}
+
+
+.economy-card {
+  padding: 20px;
+
+  border-radius: 14px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.04
+    );
+}
+
+
+.economy-card span {
+  color: #9da7b6;
+
+  font-size: 12px;
+}
+
+
+.economy-card strong {
+  display: block;
+
+  margin-top: 7px;
+
+  color: #86efac;
+
+  font-size: 28px;
+}
+
+
+.economy-card p {
+  margin: 9px 0 0;
+
+  color: #949ead;
+
+  font-size: 11px;
+}
+
+
+.bonus-card strong {
+  color: #ffd966;
+}
+
+
+/* ========================================
+   Rebate
+======================================== */
+
+.rebate-formula {
+  margin: 20px 0;
+
+  padding: 17px;
+
+  border-radius: 12px;
+
+  background:
+    rgba(
+      96,
+      165,
+      250,
+      0.09
+    );
+
+  text-align: center;
+
+  color: #c8d2df;
+}
+
+
+.rebate-formula strong {
+  margin: 0 10px;
+
+  color: #60a5fa;
+
+  font-size: 22px;
+}
+
+
+/* ========================================
+   Table
+======================================== */
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+
+.rules-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  overflow: hidden;
+
+  border-radius: 12px;
+}
+
+
+.rules-table th,
+.rules-table td {
+  padding: 13px 15px;
+
+  border-bottom:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.07
+    );
+
+  text-align: left;
+}
+
+
+.rules-table th {
+  color: #aab4c3;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.05
+    );
+
+  font-size: 12px;
+}
+
+
+.rules-table td {
+  color: #e4e9f0;
+
+  font-size: 13px;
+}
+
+
+/* ========================================
+   Example
+======================================== */
+
+.rule-example {
+  margin-top: 18px;
+
+  padding: 16px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
+
+  border-radius: 12px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.03
+    );
+}
+
+
+.rule-example span {
+  color: #60a5fa;
+
+  font-size: 10px;
+
+  font-weight: 900;
+}
+
+
+.rule-example strong {
+  display: block;
+
+  margin-top: 7px;
+
+  color: #ffffff;
+}
+
+
+.rule-example p {
+  margin: 7px 0 0;
+
+  color: #969faf;
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+
+/* ========================================
+   Disclaimer
+======================================== */
+
+.disclaimer {
+  padding: 20px;
+
+  display: flex;
+
+  gap: 13px;
+
+  border:
+    1px solid rgba(
+      248,
+      113,
+      113,
+      0.15
+    );
+
+  border-radius: 15px;
+
+  background:
+    rgba(
+      127,
+      29,
+      29,
+      0.08
+    );
+}
+
+
+.disclaimer img {
+  width: 22px;
+
+  height: 22px;
+}
+
+
+.disclaimer h2 {
+  margin: 0;
+
+  font-size: 17px;
+}
+
+
+.disclaimer p {
+  margin: 6px 0 0;
+
+  color: #a9b1bf;
+
+  font-size: 12px;
+
+  line-height: 1.7;
+}
+
+
+/* ========================================
+   Tablet
+======================================== */
+
+@media (
+  max-width: 900px
+) {
+
+  .four-columns,
+  .room-rule-grid,
+  .refund-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+
+  .economy-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+}
+
+
+/* ========================================
+   Mobile
+======================================== */
+
+@media (
+  max-width: 600px
+) {
+
+  .rules-app {
+    width:
+      calc(100% - 18px);
+
+    padding-top: 10px;
+  }
+
+
+  .rules-header {
+    grid-template-columns:
+      auto
+      1fr
+      auto;
+  }
+
+
+  .rules-header .icon-button span {
+    display: none;
+  }
+
+
+  .rules-title h1 {
+    font-size: 17px;
+  }
+
+
+  .rules-hero {
+    min-height: 220px;
+
+    padding: 23px;
+  }
+
+
+  .rules-nav {
+    position: static;
+  }
+
+
+  .rule-section {
+    padding: 19px;
+  }
+
+
+  .four-columns,
+  .room-rule-grid,
+  .refund-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .example-ball {
+    width: 49px;
+
+    height: 49px;
+  }
+
+
+  .example-draw {
+    gap: 7px;
+
+    font-size: 17px;
+  }
+
+}
