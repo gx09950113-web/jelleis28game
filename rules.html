@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="28 GAME LAB 遊戲規則"
+  >
+
+  <title>
+    遊戲規則 | 水母28
+  </title>
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="./assets/images/favicon.png"
+  >
+
+  <link
+    rel="stylesheet"
+    href="./css/common.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="./css/rules.css"
+  >
+
+</head>
+
+
+<body>
+
+  <main class="rules-app">
+
+
+    <!-- ========================================
+         Header
+    ========================================= -->
+
+    <header class="rules-header">
+
+      <button
+        id="back-button"
+        class="icon-button"
+        type="button"
+      >
+
+        <img
+          src="./assets/icons/back.svg"
+          alt=""
+        >
+
+        <span>
+          返回大廳
+        </span>
+
+      </button>
+
+
+      <div class="rules-title">
+
+        <img
+          src="./assets/icons/rules.svg"
+          alt=""
+        >
+
+        <div>
+
+          <h1>
+            遊戲規則
+          </h1>
+
+          <p>
+            28 GAME LAB
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <button
+        id="sound-toggle"
+        class="icon-button sound-button"
+        type="button"
+        aria-label="關閉聲音"
+      >
+
+        <img
+          src="./assets/icons/sound-on.svg"
+          alt="關閉聲音"
+        >
+
+      </button>
+
+    </header>
+
+
+    <!-- ========================================
+         Hero
+    ========================================= -->
+
+    <section class="rules-hero">
+
+      <div class="rules-hero-content">
+
+        <span class="hero-label">
+          HOW TO PLAY
+        </span>
+
+        <h2>
+          28 類遊戲玩法說明
+        </h2>
+
+        <p>
+          三個 0～9 的數字相加形成最終和值，
+          玩家依照大小、單雙與組合結果進行下注。
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- ========================================
+         頁面導覽
+    ========================================= -->
+
+    <nav class="rules-nav">
+
+      <button
+        class="rules-nav-button"
+        data-target="basic-rules"
+      >
+        基本玩法
+      </button>
+
+      <button
+        class="rules-nav-button"
+        data-target="rooms-rules"
+      >
+        倍場
+      </button>
+
+      <button
+        class="rules-nav-button"
+        data-target="refund-rules"
+      >
+        特殊回本
+      </button>
+
+      <button
+        class="rules-nav-button"
+        data-target="login-rules"
+      >
+        登入獎勵
+      </button>
+
+      <button
+        class="rules-nav-button"
+        data-target="rebate-rules"
+      >
+        反水
+      </button>
+
+    </nav>
+
+
+    <!-- ========================================
+         內容
+    ========================================= -->
+
+    <section class="rules-content">
+
+
+      <!-- ======================================
+           基本玩法
+      ======================================= -->
+
+      <section
+        id="basic-rules"
+        class="rule-section"
+      >
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            01
+          </span>
+
+          <div>
+
+            <h2>
+              基本玩法
+            </h2>
+
+            <p>
+              每局隨機產生三個 0～9 的數字。
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="example-draw">
+
+          <div class="example-ball">
+            4
+          </div>
+
+          <span>
+            +
+          </span>
+
+          <div class="example-ball">
+            8
+          </div>
+
+          <span>
+            +
+          </span>
+
+          <div class="example-ball">
+            7
+          </div>
+
+          <span>
+            =
+          </span>
+
+          <strong>
+            19
+          </strong>
+
+        </div>
+
+
+        <p class="rule-text">
+          三個號碼相加後，和值範圍為 0～27。
+          系統會依和值判定大小、單雙與組合結果。
+        </p>
+
+
+        <div class="rule-grid four-columns">
+
+          <div class="rule-card">
+
+            <h3>
+              大
+            </h3>
+
+            <strong>
+              14～27
+            </strong>
+
+          </div>
+
+
+          <div class="rule-card">
+
+            <h3>
+              小
+            </h3>
+
+            <strong>
+              0～13
+            </strong>
+
+          </div>
+
+
+          <div class="rule-card">
+
+            <h3>
+              單
+            </h3>
+
+            <strong>
+              奇數和值
+            </strong>
+
+          </div>
+
+
+          <div class="rule-card">
+
+            <h3>
+              雙
+            </h3>
+
+            <strong>
+              偶數和值
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <h3 class="subheading">
+          組合玩法
+        </h3>
+
+
+        <div class="rule-grid four-columns">
+
+          <div class="rule-card small-card">
+            大單
+          </div>
+
+          <div class="rule-card small-card">
+            大雙
+          </div>
+
+          <div class="rule-card small-card">
+            小單
+          </div>
+
+          <div class="rule-card small-card">
+            小雙
+          </div>
+
+        </div>
+
+
+        <div class="rule-note">
+
+          <img
+            src="./assets/icons/info.svg"
+            alt=""
+          >
+
+          <p>
+            例如 19 屬於「大」且為奇數，因此結果為「大單」。
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- ======================================
+           倍場
+      ======================================= -->
+
+      <section
+        id="rooms-rules"
+        class="rule-section"
+      >
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            02
+          </span>
+
+          <div>
+
+            <h2>
+              倍場說明
+            </h2>
+
+            <p>
+              目前提供四種遊戲倍場。
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="room-rule-grid">
+
+
+          <article class="room-rule-card">
+
+            <strong class="room-rule-multiplier">
+              1.8×
+            </strong>
+
+            <h3>
+              1.8 倍場
+            </h3>
+
+            <p>
+              基礎遊戲場。
+            </p>
+
+            <div class="rule-tags">
+
+              <span>
+                無反水
+              </span>
+
+            </div>
+
+          </article>
+
+
+          <article class="room-rule-card">
+
+            <strong class="room-rule-multiplier">
+              2.0×
+            </strong>
+
+            <h3>
+              2.0 倍場
+            </h3>
+
+            <p>
+              具特殊開獎回本機制。
+            </p>
+
+            <div class="rule-tags">
+
+              <span>
+                特殊回本
+              </span>
+
+              <span>
+                參與反水
+              </span>
+
+            </div>
+
+          </article>
+
+
+          <article class="room-rule-card">
+
+            <strong class="room-rule-multiplier">
+              2.8×
+            </strong>
+
+            <h3>
+              2.8 倍場
+            </h3>
+
+            <p>
+              高倍特殊回本場。
+            </p>
+
+            <div class="rule-tags">
+
+              <span>
+                特殊回本
+              </span>
+
+              <span>
+                參與反水
+              </span>
+
+            </div>
+
+          </article>
+
+
+          <article class="room-rule-card">
+
+            <strong class="room-rule-multiplier">
+              3.2×
+            </strong>
+
+            <h3>
+              3.2 倍場
+            </h3>
+
+            <p>
+              高倍率遊戲場。
+            </p>
+
+            <div class="rule-tags">
+
+              <span>
+                參與反水
+              </span>
+
+            </div>
+
+          </article>
+
+
+        </div>
+
+      </section>
+
+
+      <!-- ======================================
+           特殊回本
+      ======================================= -->
+
+      <section
+        id="refund-rules"
+        class="rule-section"
+      >
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            03
+          </span>
+
+          <div>
+
+            <h2>
+              特殊回本
+            </h2>
+
+            <p>
+              適用於 2.0 倍場與 2.8 倍場。
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <p class="rule-text">
+          2.0 與 2.8 倍場中，只要開獎符合以下任一條件，
+          該局會直接觸發回本。
+        </p>
+
+
+        <div class="refund-grid">
+
+
+          <div class="refund-card">
+
+            <strong>
+              0
+            </strong>
+
+            <span>
+              號碼中包含 0
+            </span>
+
+          </div>
+
+
+          <div class="refund-card">
+
+            <strong>
+              AA
+            </strong>
+
+            <span>
+              出現對子
+            </span>
+
+          </div>
+
+
+          <div class="refund-card">
+
+            <strong>
+              AAA
+            </strong>
+
+            <span>
+              出現豹子
+            </span>
+
+          </div>
+
+
+          <div class="refund-card">
+
+            <strong>
+              13 / 14
+            </strong>
+
+            <span>
+              和值為 13 或 14
+            </span>
+
+          </div>
+
+
+        </div>
+
+
+        <div class="rule-note warning">
+
+          <img
+            src="./assets/icons/info.svg"
+            alt=""
+          >
+
+          <p>
+            回本判定優先於一般勝負。符合條件時，
+            原下注本金退回，本局淨盈虧為 0。
+          </p>
+
+        </div>
+
+
+        <div class="rule-example">
+
+          <span>
+            範例
+          </span>
+
+          <strong>
+            0 + 8 + 9 = 17
+          </strong>
+
+          <p>
+            17 原本屬於大單，但因為含有 0，
+            在 2.0 與 2.8 倍場會直接回本。
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- ======================================
+           登入獎勵
+      ======================================= -->
+
+      <section
+        id="login-rules"
+        class="rule-section"
+      >
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            04
+          </span>
+
+          <div>
+
+            <h2>
+              登入獎勵
+            </h2>
+
+            <p>
+              玩家進度保存在目前瀏覽器。
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="economy-grid">
+
+
+          <div class="economy-card">
+
+            <span>
+              首次登入
+            </span>
+
+            <strong>
+              +10,000
+            </strong>
+
+            <p>
+              首次建立玩家資料時獲得。
+            </p>
+
+          </div>
+
+
+          <div class="economy-card">
+
+            <span>
+              每日登入
+            </span>
+
+            <strong>
+              +1,000
+            </strong>
+
+            <p>
+              每天第一次登入可獲得。
+            </p>
+
+          </div>
+
+
+          <div class="economy-card bonus-card">
+
+            <span>
+              連續第 7 天
+            </span>
+
+            <strong>
+              +7,777
+            </strong>
+
+            <p>
+              除每日 1,000 外額外發放。
+            </p>
+
+          </div>
+
+
+        </div>
+
+
+        <div class="rule-note">
+
+          <img
+            src="./assets/icons/calendar.svg"
+            alt=""
+          >
+
+          <p>
+            若中斷登入，連續登入天數會重新從 Day 1 計算。
+            完成第 7 天後開始下一輪七日登入週期。
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- ======================================
+           反水
+      ======================================= -->
+
+      <section
+        id="rebate-rules"
+        class="rule-section"
+      >
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            05
+          </span>
+
+          <div>
+
+            <h2>
+              每日反水
+            </h2>
+
+            <p>
+              適用於 2.0、2.8 與 3.2 倍場。
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <p class="rule-text">
+          系統每日統計符合資格倍場的有效下注額與淨盈虧，
+          並在隔日第一次登入時自動結算反水。
+        </p>
+
+
+        <div class="rebate-formula">
+
+          有效下注總額
+          <strong>
+            ×
+          </strong>
+          對應反水比例
+
+        </div>
+
+
+        <h3 class="subheading">
+          虧損反水
+        </h3>
+
+
+        <div class="table-wrapper">
+
+          <table class="rules-table">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  當日淨虧損
+                </th>
+
+                <th>
+                  反水比例
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              <tr>
+                <td>
+                  3,000～5,999
+                </td>
+                <td>
+                  0.5%
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  6,000～9,999
+                </td>
+                <td>
+                  1.0%
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  10,000～19,999
+                </td>
+                <td>
+                  1.5%
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  20,000 以上
+                </td>
+                <td>
+                  2.0%
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        <div class="rule-note warning">
+
+          <img
+            src="./assets/icons/info.svg"
+            alt=""
+          >
+
+          <p>
+            虧損反水最高不超過當日實際淨虧損的 50%。
+          </p>
+
+        </div>
+
+
+        <h3 class="subheading">
+          盈利反水
+        </h3>
+
+
+        <div class="table-wrapper">
+
+          <table class="rules-table">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  當日淨盈利
+                </th>
+
+                <th>
+                  反水比例
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              <tr>
+                <td>
+                  15,000～29,999
+                </td>
+                <td>
+                  0.3%
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  30,000～49,999
+                </td>
+                <td>
+                  0.6%
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  50,000～99,999
+                </td>
+                <td>
+                  0.9%
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  100,000 以上
+                </td>
+                <td>
+                  1.2%
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        <div class="rule-example">
+
+          <span>
+            範例
+          </span>
+
+          <strong>
+            有效下注 80,000
+          </strong>
+
+          <p>
+            若當日淨虧損為 7,500，
+            對應 1% 反水，隔日可獲得 800 代幣。
+          </p>
+
+        </div>
+
+
+        <div class="rule-note">
+
+          <img
+            src="./assets/icons/info.svg"
+            alt=""
+          >
+
+          <p>
+            1.8 倍場的下注與盈虧不計入反水系統。
+            特殊回本局仍算有效下注，但該局淨盈虧為 0。
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- ======================================
+           Disclaimer
+      ======================================= -->
+
+      <section class="disclaimer">
+
+        <img
+          src="./assets/icons/info.svg"
+          alt=""
+        >
+
+        <div>
+
+          <h2>
+            體驗版說明
+          </h2>
+
+          <p>
+            本網站所有代幣均為虛擬點數，
+            不具任何現金價值，不提供儲值、提領、
+            兌換、交易或任何 Echtgeld／เงินจริง功能。
+          </p>
+
+        </div>
+
+      </section>
+
+
+    </section>
+
+
+  </main>
+
+
+  <script
+    type="module"
+    src="./js/pages/rules.js"
+  ></script>
+
+</body>
+
+</html>
