@@ -1118,6 +1118,183 @@ button:disabled {
 
 
 /* ========================================
+   近 10 期
+======================================== */
+
+.recent-panel {
+  min-height: 0;
+}
+
+
+.recent-rounds {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+
+.recent-round-item {
+  padding: 9px 10px;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: 8px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.07
+    );
+
+  border-radius: 9px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.035
+    );
+
+  transition:
+    background 0.16s ease,
+    border-color 0.16s ease;
+}
+
+
+.recent-round-item:hover {
+  border-color:
+    rgba(
+      96,
+      165,
+      250,
+      0.18
+    );
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.055
+    );
+}
+
+
+.recent-round-main {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+
+.recent-round-issue {
+  overflow: hidden;
+
+  color: #8792a4;
+
+  font-size: 9px;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+}
+
+
+.recent-round-numbers {
+  color: #ffffff;
+
+  font-size: 13px;
+
+  font-weight: 800;
+
+  font-variant-numeric:
+    tabular-nums;
+
+  white-space: nowrap;
+}
+
+
+.recent-round-result {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  flex-wrap: wrap;
+
+  gap: 5px;
+}
+
+
+.result-badge {
+  min-width: 25px;
+
+  padding: 3px 5px;
+
+  border-radius: 6px;
+
+  color: #dce5f2;
+
+  background:
+    rgba(
+      96,
+      165,
+      250,
+      0.12
+    );
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  line-height: 1.3;
+
+  text-align: center;
+}
+
+
+.result-badge.special {
+  color: #fde68a;
+
+  background:
+    rgba(
+      245,
+      158,
+      11,
+      0.12
+    );
+}
+
+
+/*
+近十期尚無紀錄時，
+沿用 empty-bets，
+但縮小高度。
+*/
+
+.recent-rounds
+.empty-bets {
+  min-height: 70px;
+}
+
+
+/* ========================================
    提示區
 ======================================== */
 
@@ -1276,6 +1453,29 @@ button:disabled {
   }
 
 
+  /*
+  近 10 期在平板上
+  讓它佔滿整列，
+  比塞在半欄好閱讀。
+  */
+
+  .recent-panel {
+    grid-column:
+      1 / -1;
+  }
+
+
+  .recent-rounds {
+    display: grid;
+
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+
   .room-notice {
     grid-column:
       1 / -1;
@@ -1397,6 +1597,11 @@ button:disabled {
     display: flex;
   }
 
+
+  .recent-rounds {
+    display: flex;
+  }
+
 }
 
 
@@ -1511,6 +1716,37 @@ button:disabled {
     font-size: 26px;
   }
 
+
+  /*
+  近10期手機版
+  */
+
+  .recent-round-item {
+    padding:
+      9px;
+  }
+
+
+  .recent-round-numbers {
+    font-size: 12px;
+  }
+
+
+  .recent-round-result {
+    gap: 3px;
+  }
+
+
+  .result-badge {
+    min-width: 23px;
+
+    padding:
+      3px
+      4px;
+
+    font-size: 8px;
+  }
+
 }
 
 
@@ -1550,6 +1786,23 @@ button:disabled {
     width: 54px;
 
     height: 54px;
+  }
+
+
+  /*
+  超小螢幕時，
+  期號和結果上下排列。
+  */
+
+  .recent-round-item {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .recent-round-result {
+    justify-content:
+      flex-start;
   }
 
 }
