@@ -1,7 +1,7 @@
 /*
 ========================================
 28 GAME LAB
-statistics.js
+game/statistics.js
 
 負責：
 - 每日遊戲統計
@@ -9,10 +9,20 @@ statistics.js
 - 每日遊戲盈虧
 - 各倍場統計
 - WIN / LOSE / REFUND 次數
-- 反水統計
-- 保存每局詳細資料
-- 開獎歷史
-- 近 N 期查詢
+- 反水資格場次的流水與盈虧
+- 單局詳細紀錄
+- 開獎結果紀錄
+- 期號
+- 最近 N 局查詢
+
+不負責：
+- 開獎
+- 玩家下注
+- 實際結算
+- 發放反水
+- 修改玩家錢包
+
+資料保存於 localStorage。
 ========================================
 */
 
@@ -36,9 +46,21 @@ import {
 from "../config/rebate.js";
 
 
+/*
+========================================
+Storage Key
+========================================
+*/
+
 const STATISTICS_KEY =
   "statistics";
 
+
+/*
+========================================
+支援的房間
+========================================
+*/
 
 const ROOM_IDS = [
   "1.8",
@@ -49,23 +71,90 @@ const ROOM_IDS = [
 
 
 /*
-避免 localStorage 無限膨脹。
+========================================
+每日最多保留多少局詳細紀錄
 
-每個日期最多保存 300 局詳細資料。
-一般體驗用途已經非常足夠。
+避免 localStorage 長期無限制增加。
+
+300 局 / 日對目前朋友體驗用途
+已經非常充裕。
+========================================
 */
 
-const MAX_ROUNDS_PER_DAY =
+const MAX_ROUND_HISTORY_PER_DAY =
   300;
 
 
 /*
 ========================================
-空白房間統計
+建立單一房間的空白統計
 ========================================
 */
 
 function createEmptyRoomStats() {
+
+  return {
+
+    /*
+    有效下注總額
+    */
+
+    validBet: 0,
+
+
+    /*
+    實際返還總額
+    */
+
+    payout: 0,
+
+
+    /*
+    遊戲淨盈虧
+
+    正數 = 玩家盈利
+    負數 = 玩家虧損
+    */
+
+    netProfit: 0,
+
+
+    /*
+    局數
+    */
+
+    rounds: 0,
+
+
+    /*
+    下注筆數
+    */
+
+    betCount: 0,
+
+
+    /*
+    結算狀態
+    */
+
+    winCount: 0,
+
+    loseCount: 0,
+
+    refundCount: 0
+
+  };
+
+}
+
+
+/*
+========================================
+建立總統計空白資料
+========================================
+*/
+
+function createEmptyTotalStats() {
 
   return {
 
@@ -92,7 +181,7 @@ function createEmptyRoomStats() {
 
 /*
 ========================================
-空白每日統計
+建立某一天的空白統計
 ========================================
 */
 
@@ -119,29 +208,36 @@ export function createDailyStats(
     date,
 
 
-    total: {
+    /*
+    ================================
+    所有倍場統計
+    包含 1.8
+    ================================
+    */
 
-      validBet: 0,
+    total:
+      createEmptyTotalStats(),
 
-      payout: 0,
 
-      netProfit: 0,
-
-      rounds: 0,
-
-      betCount: 0,
-
-      winCount: 0,
-
-      loseCount: 0,
-
-      refundCount: 0
-
-    },
-
+    /*
+    ================================
+    各倍場資料
+    ================================
+    */
 
     rooms,
 
+
+    /*
+    ================================
+    反水專用統計
+
+    只包含：
+    2.0
+    2.8
+    3.2
+    ================================
+    */
 
     rebate: {
 
@@ -151,7 +247,17 @@ export function createDailyStats(
 
       rounds: 0,
 
+
+      /*
+      隔日是否已處理反水
+      */
+
       processed: false,
+
+
+      /*
+      實際發放資料
+      */
 
       amount: 0,
 
@@ -166,7 +272,9 @@ export function createDailyStats(
 
     /*
     ================================
-    每局詳細紀錄
+    單局詳細紀錄
+
+    一個 element = 一局
     ================================
     */
 
@@ -174,7 +282,13 @@ export function createDailyStats(
 
 
     /*
-    當日期號流水號
+    ================================
+    當日期號流水
+
+    第一筆 = 1
+    第二筆 = 2
+    ...
+    ================================
     */
 
     nextIssueNumber: 1,
@@ -182,6 +296,7 @@ export function createDailyStats(
 
     createdAt:
       Date.now(),
+
 
     updatedAt:
       Date.now()
@@ -193,7 +308,22 @@ export function createDailyStats(
 
 /*
 ========================================
-舊版資料升級
+舊資料相容
+
+因為你之前已經玩過網站，
+localStorage 裡可能存在舊版：
+
+{
+  total,
+  rooms,
+  rebate
+}
+
+但沒有：
+roundHistory
+nextIssueNumber
+
+所以讀資料時自動補齊。
 ========================================
 */
 
@@ -208,36 +338,25 @@ function normalizeDailyStats(
   }
 
 
-  if (
-    !Array.isArray(
-      dailyStats.roundHistory
-    )
-  ) {
+  /*
+  total
+  */
 
-    dailyStats.roundHistory =
-      [];
+  if (!dailyStats.total) {
 
-  }
-
-
-  if (
-    !Number.isInteger(
-      dailyStats.nextIssueNumber
-    )
-  ) {
-
-    dailyStats.nextIssueNumber =
-      dailyStats.roundHistory.length
-      +
-      1;
+    dailyStats.total =
+      createEmptyTotalStats();
 
   }
 
+
+  /*
+  rooms
+  */
 
   if (!dailyStats.rooms) {
 
-    dailyStats.rooms =
-      {};
+    dailyStats.rooms = {};
 
   }
 
@@ -263,6 +382,72 @@ function normalizeDailyStats(
   }
 
 
+  /*
+  rebate
+  */
+
+  if (!dailyStats.rebate) {
+
+    dailyStats.rebate = {
+
+      validBet: 0,
+
+      netProfit: 0,
+
+      rounds: 0,
+
+      processed: false,
+
+      amount: 0,
+
+      rate: 0,
+
+      type: null,
+
+      processedAt: null
+
+    };
+
+  }
+
+
+  /*
+  單局歷史
+  */
+
+  if (
+    !Array.isArray(
+      dailyStats.roundHistory
+    )
+  ) {
+
+    dailyStats.roundHistory =
+      [];
+
+  }
+
+
+  /*
+  期號流水
+  */
+
+  if (
+    !Number.isInteger(
+      dailyStats.nextIssueNumber
+    )
+    ||
+    dailyStats.nextIssueNumber
+    < 1
+  ) {
+
+    dailyStats.nextIssueNumber =
+      dailyStats.roundHistory.length
+      +
+      1;
+
+  }
+
+
   return dailyStats;
 
 }
@@ -270,22 +455,49 @@ function normalizeDailyStats(
 
 /*
 ========================================
-全部統計
+讀取全部統計
 ========================================
 */
 
 export function getAllStatistics() {
 
-  return (
+  const statistics =
     getStorage(
       STATISTICS_KEY
     )
     ??
-    {}
-  );
+    {};
+
+
+  /*
+  把歷史舊格式一起補齊。
+  */
+
+  for (
+    const date
+    of Object.keys(
+      statistics
+    )
+  ) {
+
+    statistics[date] =
+      normalizeDailyStats(
+        statistics[date]
+      );
+
+  }
+
+
+  return statistics;
 
 }
 
+
+/*
+========================================
+保存全部統計
+========================================
+*/
 
 function saveAllStatistics(
   statistics
@@ -301,7 +513,7 @@ function saveAllStatistics(
 
 /*
 ========================================
-單日統計
+取得指定日期統計
 ========================================
 */
 
@@ -331,7 +543,7 @@ export function getDailyStats(
 
 /*
 ========================================
-取得或建立
+取得或建立某日統計
 ========================================
 */
 
@@ -373,7 +585,7 @@ export function getOrCreateDailyStats(
 
 /*
 ========================================
-保存每日統計
+保存指定日期統計
 ========================================
 */
 
@@ -392,6 +604,12 @@ export function saveDailyStats(
     );
 
   }
+
+
+  dailyStats =
+    normalizeDailyStats(
+      dailyStats
+    );
 
 
   dailyStats.updatedAt =
@@ -417,7 +635,7 @@ export function saveDailyStats(
 
 /*
 ========================================
-反水資格房間
+房間是否參與反水
 ========================================
 */
 
@@ -438,7 +656,7 @@ export function isRebateEligibleRoom(
 
 /*
 ========================================
-Settlement 驗證
+驗證 Settlement
 ========================================
 */
 
@@ -481,6 +699,45 @@ function validateSettlement(
   }
 
 
+  if (
+    !Number.isFinite(
+      settlement.totalBet
+    )
+  ) {
+
+    throw new Error(
+      "結算資料缺少 totalBet。"
+    );
+
+  }
+
+
+  if (
+    !Number.isFinite(
+      settlement.totalPayout
+    )
+  ) {
+
+    throw new Error(
+      "結算資料缺少 totalPayout。"
+    );
+
+  }
+
+
+  if (
+    !Number.isFinite(
+      settlement.netProfit
+    )
+  ) {
+
+    throw new Error(
+      "結算資料缺少 netProfit。"
+    );
+
+  }
+
+
   return true;
 
 }
@@ -488,38 +745,98 @@ function validateSettlement(
 
 /*
 ========================================
-期號格式
+驗證 Draw Result
 ========================================
+*/
+
+function validateDrawResult(
+  drawResult
+) {
+
+  if (!drawResult) {
+
+    throw new Error(
+      "缺少開獎結果。"
+    );
+
+  }
+
+
+  if (
+    !Array.isArray(
+      drawResult.numbers
+    )
+    ||
+    drawResult.numbers.length
+    !==
+    3
+  ) {
+
+    throw new Error(
+      "開獎結果缺少三個號碼。"
+    );
+
+  }
+
+
+  if (
+    !Number.isInteger(
+      drawResult.sum
+    )
+  ) {
+
+    throw new Error(
+      "開獎結果缺少和值。"
+    );
+
+  }
+
+
+  return true;
+
+}
+
+
+/*
+========================================
+建立期號
 
 例如：
 
+日期：
 2026-08-16
-第 12 局
 
-→ 20260816-012
+當日第 7 筆有下注結算：
+
+20260816-007
 ========================================
 */
 
 function createIssueNumber(
   date,
-  number
+  issueNumber
 ) {
 
   const datePart =
-    date.replaceAll(
-      "-",
-      ""
-    );
+    String(date)
+      .replaceAll(
+        "-",
+        ""
+      );
 
 
-  return (
-    `${datePart}-`
-    +
-    String(number)
+  const numberPart =
+    String(
+      issueNumber
+    )
       .padStart(
         3,
         "0"
-      )
+      );
+
+
+  return (
+    `${datePart}-${numberPart}`
   );
 
 }
@@ -527,7 +844,63 @@ function createIssueNumber(
 
 /*
 ========================================
-建立單局紀錄
+複製每一筆下注詳細資料
+
+不要直接保存原始 object reference，
+避免後續修改影響歷史紀錄。
+========================================
+*/
+
+function createBetRecord(
+  settlement
+) {
+
+  return {
+
+    betId:
+      settlement.betId,
+
+
+    type:
+      settlement.type,
+
+
+    amount:
+      settlement.amount,
+
+
+    result:
+      settlement.result,
+
+
+    payout:
+      settlement.payout,
+
+
+    netProfit:
+      settlement.netProfit,
+
+
+    refundReasons:
+      Array.isArray(
+        settlement.refundReasons
+      )
+
+      ? [
+          ...settlement
+            .refundReasons
+        ]
+
+      : []
+
+  };
+
+}
+
+
+/*
+========================================
+建立單局詳細資料
 ========================================
 */
 
@@ -537,16 +910,24 @@ function createRoundRecord(
   drawResult
 ) {
 
+  const issueNumber =
+    dailyStats
+      .nextIssueNumber;
+
+
   const issue =
     createIssueNumber(
 
       dailyStats.date,
 
-      dailyStats
-        .nextIssueNumber
+      issueNumber
 
     );
 
+
+  /*
+  下一局使用下一號
+  */
 
   dailyStats
     .nextIssueNumber +=
@@ -555,117 +936,141 @@ function createRoundRecord(
 
   return {
 
+    /*
+    ================================
+    基本資料
+    ================================
+    */
+
     issue,
+
+    issueNumber,
+
+    date:
+      dailyStats.date,
 
     roomId:
       settlement.roomId,
 
 
     /*
-    開獎
+    ================================
+    開獎結果
+    ================================
     */
 
     draw: {
 
       numbers:
         [
-          ...drawResult.numbers
+          ...drawResult
+            .numbers
         ],
+
 
       sum:
         drawResult.sum,
 
+
       size:
         drawResult.size,
+
 
       parity:
         drawResult.parity,
 
+
       sizeParity:
         drawResult.sizeParity,
 
+
       hasZero:
-        drawResult.hasZero,
+        Boolean(
+          drawResult.hasZero
+        ),
+
 
       isPair:
-        drawResult.isPair,
+        Boolean(
+          drawResult.isPair
+        ),
+
 
       isLeopard:
-        drawResult.isLeopard,
+        Boolean(
+          drawResult.isLeopard
+        ),
+
+
+      isMiddleSum:
+        Boolean(
+          drawResult.isMiddleSum
+        ),
+
 
       isSum13:
-        drawResult.isSum13,
+        Boolean(
+          drawResult.isSum13
+        ),
+
 
       isSum14:
-        drawResult.isSum14
+        Boolean(
+          drawResult.isSum14
+        )
 
     },
 
 
     /*
-    玩家本局結算
+    ================================
+    本局總結算
+    ================================
     */
 
     totalBet:
       settlement.totalBet,
 
+
     totalPayout:
       settlement.totalPayout,
+
 
     netProfit:
       settlement.netProfit,
 
+
     winCount:
       settlement.winCount,
 
+
     loseCount:
       settlement.loseCount,
+
 
     refundCount:
       settlement.refundCount,
 
 
     /*
-    每一筆下注詳細
+    ================================
+    每筆下注明細
+    ================================
     */
 
     bets:
-      settlement.settlements
+      settlement
+        .settlements
         .map(
-          item => ({
-
-            betId:
-              item.betId,
-
-            type:
-              item.type,
-
-            amount:
-              item.amount,
-
-            result:
-              item.result,
-
-            payout:
-              item.payout,
-
-            netProfit:
-              item.netProfit,
-
-            refundReasons:
-              Array.isArray(
-                item.refundReasons
-              )
-
-              ? [
-                  ...item.refundReasons
-                ]
-
-              : []
-
-          })
+          createBetRecord
         ),
 
+
+    /*
+    ================================
+    時間
+    ================================
+    */
 
     settledAt:
       settlement.settledAt
@@ -679,14 +1084,67 @@ function createRoundRecord(
 
 /*
 ========================================
-記錄一局
+限制每日歷史紀錄長度
+========================================
+*/
 
-現在需要：
+function trimRoundHistory(
+  dailyStats
+) {
+
+  if (
+    dailyStats
+      .roundHistory
+      .length
+    <=
+    MAX_ROUND_HISTORY_PER_DAY
+  ) {
+
+    return;
+
+  }
+
+
+  /*
+  只保留最新 300 局。
+  */
+
+  dailyStats.roundHistory =
+    dailyStats
+      .roundHistory
+      .slice(
+        -MAX_ROUND_HISTORY_PER_DAY
+      );
+
+}
+
+
+/*
+========================================
+記錄一局結算
+
+新版呼叫方式：
 
 recordSettlement(
   settlement,
   drawResult
-)
+);
+
+注意：
+
+目前 pages/game.js 只有在
+settlement.totalBet > 0
+才呼叫這個函式。
+
+因此目前 roundHistory 的定義為：
+
+「玩家有下注的開獎期數」
+
+而不是：
+「遊戲所有開獎期數」
+
+真正獨立的全開獎歷史，
+後面再拆 draw history。
 ========================================
 */
 
@@ -701,19 +1159,9 @@ export function recordSettlement(
   );
 
 
-  if (
-    !drawResult
-    ||
-    !Array.isArray(
-      drawResult.numbers
-    )
-  ) {
-
-    throw new Error(
-      "缺少開獎結果。"
-    );
-
-  }
+  validateDrawResult(
+    drawResult
+  );
 
 
   const dailyStats =
@@ -774,47 +1222,68 @@ export function recordSettlement(
 
   /*
   ================================
-  全站統計
+  全站遊戲統計
   ================================
   */
 
-  dailyStats.total.validBet +=
+  dailyStats
+    .total
+    .validBet +=
     settlement.totalBet;
 
 
-  dailyStats.total.payout +=
+  dailyStats
+    .total
+    .payout +=
     settlement.totalPayout;
 
 
-  dailyStats.total.netProfit +=
+  dailyStats
+    .total
+    .netProfit +=
     settlement.netProfit;
 
 
-  dailyStats.total.rounds +=
+  dailyStats
+    .total
+    .rounds +=
     1;
 
 
-  dailyStats.total.betCount +=
+  dailyStats
+    .total
+    .betCount +=
     settlement
       .settlements
       .length;
 
 
-  dailyStats.total.winCount +=
+  dailyStats
+    .total
+    .winCount +=
     settlement.winCount;
 
 
-  dailyStats.total.loseCount +=
+  dailyStats
+    .total
+    .loseCount +=
     settlement.loseCount;
 
 
-  dailyStats.total.refundCount +=
+  dailyStats
+    .total
+    .refundCount +=
     settlement.refundCount;
 
 
   /*
   ================================
-  反水
+  反水統計
+
+  僅：
+  2.0
+  2.8
+  3.2
   ================================
   */
 
@@ -846,7 +1315,7 @@ export function recordSettlement(
 
   /*
   ================================
-  保存單局詳細資料
+  建立單局詳細紀錄
   ================================
   */
 
@@ -869,32 +1338,29 @@ export function recordSettlement(
     );
 
 
-  /*
-  限制資料量
-  */
-
-  if (
+  trimRoundHistory(
     dailyStats
-      .roundHistory
-      .length
-    >
-    MAX_ROUNDS_PER_DAY
-  ) {
+  );
 
-    dailyStats.roundHistory =
-      dailyStats
-        .roundHistory
-        .slice(
-          -MAX_ROUNDS_PER_DAY
-        );
 
-  }
-
+  /*
+  ================================
+  保存
+  ================================
+  */
 
   saveDailyStats(
     dailyStats
   );
 
+
+  /*
+  回傳 dailyStats 的同時，
+  也把剛建立的 roundRecord 回傳。
+
+  之後如果 game.js 想顯示
+  當期期號可以直接使用。
+  */
 
   return {
 
@@ -909,7 +1375,7 @@ export function recordSettlement(
 
 /*
 ========================================
-單一房間每日統計
+取得某日特定倍場統計
 ========================================
 */
 
@@ -917,6 +1383,19 @@ export function getRoomStats(
   roomId,
   date = getLocalDateString()
 ) {
+
+  if (
+    !ROOM_IDS.includes(
+      roomId
+    )
+  ) {
+
+    throw new Error(
+      `無效的倍場：${roomId}`
+    );
+
+  }
+
 
   const dailyStats =
     getDailyStats(
@@ -931,19 +1410,21 @@ export function getRoomStats(
   }
 
 
-  return dailyStats
-    .rooms[
-      roomId
-    ]
+  return (
+    dailyStats
+      .rooms[
+        roomId
+      ]
     ??
-    null;
+    null
+  );
 
 }
 
 
 /*
 ========================================
-反水統計
+取得反水統計
 ========================================
 */
 
@@ -971,7 +1452,7 @@ export function getRebateStats(
 
 /*
 ========================================
-標記反水
+將反水標記為已處理
 ========================================
 */
 
@@ -997,6 +1478,10 @@ export function markRebateProcessed(
   }
 
 
+  /*
+  防止重複領取
+  */
+
   if (
     dailyStats
       .rebate
@@ -1015,7 +1500,9 @@ export function markRebateProcessed(
   dailyStats.rebate.amount =
     Math.max(
       0,
-      Math.floor(amount)
+      Math.floor(
+        amount
+      )
     );
 
 
@@ -1043,7 +1530,9 @@ export function markRebateProcessed(
 
 /*
 ========================================
-日期紀錄
+取得日期排序後統計
+
+新 → 舊
 ========================================
 */
 
@@ -1062,16 +1551,23 @@ export function getStatisticsHistory() {
     )
     .sort(
       (
-        a,
-        b
+        first,
+        second
       ) =>
-        b.date.localeCompare(
-          a.date
-        )
+        second.date
+          .localeCompare(
+            first.date
+          )
     );
 
 }
 
+
+/*
+========================================
+最近 N 個有紀錄日期
+========================================
+*/
 
 export function getRecentStatistics(
   days = 7
@@ -1088,29 +1584,34 @@ export function getRecentStatistics(
 
 /*
 ========================================
-取得所有單局詳細紀錄
+取得所有單局紀錄
 
-新 → 舊
+跨日期合併。
+
+回傳順序：
+最新 → 最舊
 ========================================
 */
 
 export function getAllRoundHistory() {
 
-  const days =
+  const statistics =
     getStatisticsHistory();
 
 
-  const rounds = [];
+  const rounds =
+    [];
 
 
   for (
-    const day
-    of days
+    const dailyStats
+    of statistics
   ) {
 
     if (
       !Array.isArray(
-        day.roundHistory
+        dailyStats
+          .roundHistory
       )
     ) {
 
@@ -1120,42 +1621,70 @@ export function getAllRoundHistory() {
 
 
     rounds.push(
-      ...day.roundHistory
+      ...dailyStats
+        .roundHistory
     );
 
   }
 
 
-  return rounds.sort(
+  /*
+  不直接相信陣列原本順序，
+  用 settledAt 排一次。
+  */
+
+  rounds.sort(
     (
-      a,
-      b
-    ) =>
-      (
-        b.settledAt
-        ?? 0
-      )
-      -
-      (
-        a.settledAt
-        ?? 0
-      )
+      first,
+      second
+    ) => {
+
+      const firstTime =
+        first.settledAt
+        ??
+        0;
+
+
+      const secondTime =
+        second.settledAt
+        ??
+        0;
+
+
+      return (
+        secondTime
+        -
+        firstTime
+      );
+
+    }
   );
+
+
+  return rounds;
 
 }
 
 
 /*
 ========================================
-最近 N 局
+取得最近 N 局
 
-可指定 roomId。
+使用方式：
 
-例如：
+getRecentRounds(
+  10
+)
 
-getRecentRounds(10, "2.8")
+→ 所有倍場最近 10 局
 
-→ 2.8 倍場最近 10 期
+
+getRecentRounds(
+  10,
+  "2.8"
+)
+
+→ 只取 2.8 倍場最近 10 局
 ========================================
 */
 
@@ -1168,7 +1697,26 @@ export function getRecentRounds(
     getAllRoundHistory();
 
 
-  if (roomId) {
+  /*
+  房間篩選
+  */
+
+  if (
+    roomId
+    !==
+    null
+  ) {
+
+    if (
+      !ROOM_IDS.includes(
+        roomId
+      )
+    ) {
+
+      return [];
+
+    }
+
 
     rounds =
       rounds.filter(
@@ -1181,9 +1729,25 @@ export function getRecentRounds(
   }
 
 
+  /*
+  limit 防呆
+  */
+
+  const safeLimit =
+    Number.isInteger(
+      limit
+    )
+    &&
+    limit > 0
+
+    ? limit
+
+    : 10;
+
+
   return rounds.slice(
     0,
-    limit
+    safeLimit
   );
 
 }
@@ -1191,7 +1755,13 @@ export function getRecentRounds(
 
 /*
 ========================================
-取得單一期號
+依期號取得單局紀錄
+
+例如：
+
+getRoundByIssue(
+  "20260816-007"
+)
 ========================================
 */
 
@@ -1199,14 +1769,24 @@ export function getRoundByIssue(
   issue
 ) {
 
+  if (!issue) {
+
+    return null;
+
+  }
+
+
+  const rounds =
+    getAllRoundHistory();
+
+
   return (
-    getAllRoundHistory()
-      .find(
-        round =>
-          round.issue
-          ===
-          issue
-      )
+    rounds.find(
+      round =>
+        round.issue
+        ===
+        issue
+    )
     ??
     null
   );
@@ -1216,7 +1796,101 @@ export function getRoundByIssue(
 
 /*
 ========================================
-刪除某日
+取得指定日期的單局紀錄
+
+預設：
+新 → 舊
+========================================
+*/
+
+export function getRoundsByDate(
+  date
+) {
+
+  const dailyStats =
+    getDailyStats(
+      date
+    );
+
+
+  if (
+    !dailyStats
+    ||
+    !Array.isArray(
+      dailyStats
+        .roundHistory
+    )
+  ) {
+
+    return [];
+
+  }
+
+
+  return [
+    ...dailyStats
+      .roundHistory
+  ]
+    .sort(
+      (
+        first,
+        second
+      ) =>
+        (
+          second.settledAt
+          ??
+          0
+        )
+        -
+        (
+          first.settledAt
+          ??
+          0
+        )
+    );
+
+}
+
+
+/*
+========================================
+取得指定房間所有單局紀錄
+========================================
+*/
+
+export function getRoundsByRoom(
+  roomId
+) {
+
+  if (
+    !ROOM_IDS.includes(
+      roomId
+    )
+  ) {
+
+    return [];
+
+  }
+
+
+  return getAllRoundHistory()
+    .filter(
+      round =>
+        round.roomId
+        ===
+        roomId
+    );
+
+}
+
+
+/*
+========================================
+清除指定日期統計
+
+主要供：
+- 開發
+- 測試
 ========================================
 */
 
