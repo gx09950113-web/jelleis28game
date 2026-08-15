@@ -16,6 +16,7 @@ pages/game.js
 - 結算
 - 發放返還代幣
 - 記錄每日統計
+- 顯示本倍場近 10 期
 - 房間 BGM
 - 遊戲音效
 - 返回大廳
@@ -66,7 +67,6 @@ import {
   BET_LABELS,
   createBetSlip,
   addBet,
-  removeBet,
   clearBets,
   lockBetSlip,
   summarizeBets
@@ -75,14 +75,14 @@ from "../game/betting.js";
 
 
 import {
-  settleBetSlip,
-  BET_RESULT
+  settleBetSlip
 }
 from "../game/settlement.js";
 
 
 import {
-  recordSettlement
+  recordSettlement,
+  getRecentRounds
 }
 from "../game/statistics.js";
 
@@ -109,14 +109,15 @@ const GAME_CONFIG = {
 
 
   /*
-  最後幾秒開始播放倒數音
+  最後幾秒播放倒數音
   */
 
   countdownSoundFrom: 5,
 
 
   /*
-  開獎後多久進下一局
+  開獎完成後，
+  幾秒後進入下一局
   */
 
   nextRoundDelay: 5000
@@ -180,8 +181,9 @@ let player =
 if (!player) {
 
   /*
-  玩家沒有經過首頁初始化，
-  直接進 game.html 時送回首頁。
+  如果玩家沒有先經過首頁建立資料，
+  直接進 game.html，
+  就送回首頁。
   */
 
   window.location.href =
@@ -196,7 +198,7 @@ if (!player) {
 
 
 /*
-舊版資料相容
+舊版玩家資料相容
 */
 
 if (
@@ -247,6 +249,16 @@ let countdownTimer =
 
 let nextRoundTimer =
   null;
+
+
+/*
+========================================
+目前選擇籌碼
+========================================
+*/
+
+let selectedChip =
+  100;
 
 
 /*
@@ -585,7 +597,9 @@ function renderRoom() {
     );
 
 
-  if (roomName) {
+  if (
+    roomName
+  ) {
 
     roomName.textContent =
       room.name;
@@ -599,7 +613,9 @@ function renderRoom() {
     );
 
 
-  if (multiplier) {
+  if (
+    multiplier
+  ) {
 
     multiplier.textContent =
       `${room.multiplier}×`;
@@ -688,7 +704,9 @@ function setGameStatus(
     );
 
 
-  if (element) {
+  if (
+    element
+  ) {
 
     element.textContent =
       text;
@@ -740,7 +758,9 @@ function renderBettingState() {
     );
 
 
-  if (clearButton) {
+  if (
+    clearButton
+  ) {
 
     clearButton.disabled =
       !bettingOpen;
@@ -845,11 +865,19 @@ function renderBetSlip() {
     item.innerHTML =
       `
         <span>
-          ${BET_LABELS[type] ?? type}
+          ${
+            BET_LABELS[
+              type
+            ]
+            ??
+            type
+          }
         </span>
 
         <strong>
-          ${formatNumber(amount)}
+          ${formatNumber(
+            amount
+          )}
         </strong>
       `;
 
@@ -865,13 +893,9 @@ function renderBetSlip() {
 
 /*
 ========================================
-目前選擇的籌碼
+選中籌碼 UI
 ========================================
 */
-
-let selectedChip =
-  100;
-
 
 function renderSelectedChip() {
 
@@ -889,8 +913,13 @@ function renderSelectedChip() {
 
 
         button.classList.toggle(
+
           "selected",
-          amount === selectedChip
+
+          amount
+          ===
+          selectedChip
+
         );
 
       }
@@ -901,7 +930,7 @@ function renderSelectedChip() {
 
 /*
 ========================================
-選擇籌碼
+籌碼按鈕
 ========================================
 */
 
@@ -990,6 +1019,10 @@ function placeBet(
   }
 
 
+  /*
+  檢查餘額
+  */
+
   if (
     !canAfford(
       selectedChip
@@ -997,11 +1030,15 @@ function placeBet(
   ) {
 
     showToast(
+
       "代幣不足",
+
       `目前餘額不足以下注 ${formatNumber(
         selectedChip
       )} 代幣。`
+
     );
+
 
     return;
 
@@ -1018,7 +1055,9 @@ function placeBet(
     );
 
 
-  if (!deducted) {
+  if (
+    !deducted
+  ) {
 
     showToast(
       "下注失敗",
@@ -1031,18 +1070,22 @@ function placeBet(
 
 
   /*
-  再建立下注
+  建立下注。
 
   如果 addBet 發生錯誤，
-  必須把錢退回。
+  把剛才扣掉的本金退回。
   */
 
   try {
 
     addBet(
+
       currentBetSlip,
+
       type,
+
       selectedChip
+
     );
 
   }
@@ -1083,7 +1126,7 @@ function placeBet(
 
 /*
 ========================================
-下注選項
+下注按鈕
 ========================================
 */
 
@@ -1120,13 +1163,10 @@ function setupBetButtons() {
 /*
 ========================================
 清空下注
+========================================
 
-注意：
-
-下注時已經扣款。
-
-所以清空下注必須
-把本金退回玩家。
+下注時已經扣除本金，
+所以清空下注時必須退回。
 ========================================
 */
 
@@ -1179,10 +1219,13 @@ function clearCurrentBets() {
 
 
   showToast(
+
     "已清除下注",
+
     `已退回 ${formatNumber(
       refundAmount
     )} 代幣。`
+
   );
 
 }
@@ -1232,6 +1275,7 @@ function renderDrawResult(
 
 
   const numberElements = [
+
     getElement(
       "number-1"
     ),
@@ -1243,6 +1287,7 @@ function renderDrawResult(
     getElement(
       "number-3"
     )
+
   ];
 
 
@@ -1253,10 +1298,14 @@ function renderDrawResult(
         index
       ) => {
 
-        if (element) {
+        if (
+          element
+        ) {
 
           element.textContent =
-            numbers[index];
+            numbers[
+              index
+            ];
 
         }
 
@@ -1270,7 +1319,9 @@ function renderDrawResult(
     );
 
 
-  if (sum) {
+  if (
+    sum
+  ) {
 
     sum.textContent =
       drawResult.sum;
@@ -1284,71 +1335,276 @@ function renderDrawResult(
     );
 
 
-  if (result) {
+  if (
+    !result
+  ) {
 
-    const labels = [];
+    return;
 
+  }
+
+
+  const labels =
+    [];
+
+
+  labels.push(
+
+    drawResult.size
+    ===
+    "big"
+
+    ? "大"
+
+    : "小"
+
+  );
+
+
+  labels.push(
+
+    drawResult.parity
+    ===
+    "odd"
+
+    ? "單"
+
+    : "雙"
+
+  );
+
+
+  if (
+    drawResult.hasZero
+  ) {
 
     labels.push(
-      drawResult.size
+      "含0"
+    );
+
+  }
+
+
+  if (
+    drawResult.isPair
+  ) {
+
+    labels.push(
+      "對子"
+    );
+
+  }
+
+
+  if (
+    drawResult.isLeopard
+  ) {
+
+    labels.push(
+      "豹子"
+    );
+
+  }
+
+
+  if (
+    drawResult.isSum13
+  ) {
+
+    labels.push(
+      "13"
+    );
+
+  }
+
+
+  if (
+    drawResult.isSum14
+  ) {
+
+    labels.push(
+      "14"
+    );
+
+  }
+
+
+  result.textContent =
+    labels.join(
+      " · "
+    );
+
+}
+
+
+/*
+========================================
+近 10 期
+========================================
+
+目前顯示：
+- 期號
+- 三個開獎號碼
+- 和值
+- 大 / 小
+- 單 / 雙
+- 0 / 對 / 豹等特殊標記
+
+只顯示目前所在倍場。
+========================================
+*/
+
+function renderRecentRounds() {
+
+  const container =
+    getElement(
+      "recent-rounds"
+    );
+
+
+  if (!container) {
+
+    return;
+
+  }
+
+
+  const rounds =
+    getRecentRounds(
+      10,
+      roomId
+    );
+
+
+  container.innerHTML =
+    "";
+
+
+  if (
+    rounds.length
+    ===
+    0
+  ) {
+
+    container.innerHTML =
+      `
+        <div class="empty-bets">
+          尚無開獎紀錄
+        </div>
+      `;
+
+
+    return;
+
+  }
+
+
+  for (
+    const round
+    of rounds
+  ) {
+
+    /*
+    防止舊資料沒有 draw
+    導致整個畫面掛掉。
+    */
+
+    if (
+      !round.draw
+      ||
+      !Array.isArray(
+        round.draw.numbers
+      )
+    ) {
+
+      continue;
+
+    }
+
+
+    const draw =
+      round.draw;
+
+
+    const item =
+      document.createElement(
+        "div"
+      );
+
+
+    item.className =
+      "recent-round-item";
+
+
+    const sizeLabel =
+      draw.size
       ===
       "big"
 
       ? "大"
 
-      : "小"
-    );
+      : "小";
 
 
-    labels.push(
-      drawResult.parity
+    const parityLabel =
+      draw.parity
       ===
       "odd"
 
       ? "單"
 
-      : "雙"
-    );
+      : "雙";
+
+
+    const specialLabels =
+      [];
 
 
     if (
-      drawResult.hasZero
+      draw.hasZero
     ) {
 
-      labels.push(
-        "含0"
+      specialLabels.push(
+        "0"
       );
 
     }
 
 
     if (
-      drawResult.isPair
+      draw.isPair
     ) {
 
-      labels.push(
-        "對子"
+      specialLabels.push(
+        "對"
       );
 
     }
 
 
     if (
-      drawResult.isLeopard
+      draw.isLeopard
     ) {
 
-      labels.push(
-        "豹子"
+      specialLabels.push(
+        "豹"
       );
 
     }
 
 
+    /*
+    13 / 14 也標出來。
+
+    即使不是所有房間都會因此回本，
+    它仍然屬於開獎結果資訊。
+    */
+
     if (
-      drawResult.isSum13
+      draw.isSum13
     ) {
 
-      labels.push(
+      specialLabels.push(
         "13"
       );
 
@@ -1356,20 +1612,104 @@ function renderDrawResult(
 
 
     if (
-      drawResult.isSum14
+      draw.isSum14
     ) {
 
-      labels.push(
+      specialLabels.push(
         "14"
       );
 
     }
 
 
-    result.textContent =
-      labels.join(
-        " · "
-      );
+    const specialHtml =
+      specialLabels
+        .map(
+          label =>
+            `
+              <span
+                class="
+                  result-badge
+                  special
+                "
+              >
+                ${label}
+              </span>
+            `
+        )
+        .join(
+          ""
+        );
+
+
+    item.innerHTML =
+      `
+        <div class="recent-round-main">
+
+          <span class="recent-round-issue">
+            ${
+              round.issue
+              ??
+              "-"
+            }
+          </span>
+
+          <strong class="recent-round-numbers">
+
+            ${draw.numbers[0]}
+            +
+            ${draw.numbers[1]}
+            +
+            ${draw.numbers[2]}
+            =
+            ${draw.sum}
+
+          </strong>
+
+        </div>
+
+
+        <div class="recent-round-result">
+
+          <span class="result-badge">
+            ${sizeLabel}
+          </span>
+
+          <span class="result-badge">
+            ${parityLabel}
+          </span>
+
+          ${specialHtml}
+
+        </div>
+      `;
+
+
+    container.appendChild(
+      item
+    );
+
+  }
+
+
+  /*
+  如果資料存在，
+  但全部都是舊版無 draw 的資料，
+  還是顯示空狀態。
+  */
+
+  if (
+    container.children.length
+    ===
+    0
+  ) {
+
+    container.innerHTML =
+      `
+        <div class="empty-bets">
+          尚無開獎紀錄
+        </div>
+      `;
 
   }
 
@@ -1419,7 +1759,9 @@ function renderSettlement(
 
 
   const profitSign =
-    settlement.netProfit > 0
+    settlement.netProfit
+    >
+    0
 
     ? "+"
 
@@ -1429,30 +1771,47 @@ function renderSettlement(
   element.innerHTML =
     `
       <div>
-        本局下注：
+
+        <span>
+          本局下注
+        </span>
+
         <strong>
           ${formatNumber(
             settlement.totalBet
           )}
         </strong>
+
       </div>
 
+
       <div>
-        本局返還：
+
+        <span>
+          本局返還
+        </span>
+
         <strong>
           ${formatNumber(
             settlement.totalPayout
           )}
         </strong>
+
       </div>
 
+
       <div>
-        本局盈虧：
+
+        <span>
+          本局盈虧
+        </span>
+
         <strong>
           ${profitSign}${formatNumber(
             settlement.netProfit
           )}
         </strong>
+
       </div>
     `;
 
@@ -1470,8 +1829,7 @@ function playSettlementSound(
 ) {
 
   /*
-  有回本
-  優先播放 refund
+  全部都是 REFUND
   */
 
   if (
@@ -1539,7 +1897,7 @@ function playSettlementSound(
 
 
   /*
-  0 盈虧
+  0 盈虧且包含 REFUND
   */
 
   if (
@@ -1568,10 +1926,10 @@ function applySettlement(
 ) {
 
   /*
-  下注本金已經下注時扣掉。
+  玩家下注時本金已扣除。
 
   所以這裡只要把
-  totalPayout 加回即可。
+  totalPayout 加回錢包。
   */
 
   if (
@@ -1613,7 +1971,9 @@ function executeDraw() {
 
 
   /*
-  產生開獎
+  ================================
+  1. 產生開獎
+  ================================
   */
 
   const draw =
@@ -1621,7 +1981,9 @@ function executeDraw() {
 
 
   /*
-  分析
+  ================================
+  2. 分析開獎
+  ================================
   */
 
   const drawResult =
@@ -1631,7 +1993,9 @@ function executeDraw() {
 
 
   /*
-  顯示
+  ================================
+  3. 顯示開獎
+  ================================
   */
 
   renderDrawResult(
@@ -1640,9 +2004,9 @@ function executeDraw() {
 
 
   /*
-  即使沒下注，
-  settlement 仍可正常處理
-  空 betSlip。
+  ================================
+  4. 結算下注
+  ================================
   */
 
   const settlement =
@@ -1653,7 +2017,9 @@ function executeDraw() {
 
 
   /*
-  發放返還
+  ================================
+  5. 發放返還
+  ================================
   */
 
   applySettlement(
@@ -1662,10 +2028,16 @@ function executeDraw() {
 
 
   /*
-  寫入每日統計
+  ================================
+  6. 寫入每日統計 + 單局歷史
 
-  如果沒有下注，
-  不記錄成有效遊戲統計。
+  目前只記錄玩家有下注的局。
+
+  下一階段如果要把
+  「真正每一期開獎」
+  與玩家下注紀錄完全分離，
+  再建立 draw history。
+  ================================
   */
 
   if (
@@ -1675,16 +2047,38 @@ function executeDraw() {
   ) {
 
     recordSettlement(
-      settlement
+      settlement,
+      drawResult
     );
 
   }
 
 
+  /*
+  ================================
+  7. 顯示結算
+  ================================
+  */
+
   renderSettlement(
     settlement
   );
 
+
+  /*
+  ================================
+  8. 更新近 10 期
+  ================================
+  */
+
+  renderRecentRounds();
+
+
+  /*
+  ================================
+  9. 結算音效
+  ================================
+  */
 
   playSettlementSound(
     settlement
@@ -1697,7 +2091,9 @@ function executeDraw() {
 
 
   /*
-  下一局
+  ================================
+  10. 下一局
+  ================================
   */
 
   nextRoundTimer =
@@ -1785,7 +2181,7 @@ function startCountdown() {
 
 
         /*
-        最後幾秒播放提示音
+        最後幾秒播放倒數提示音
         */
 
         if (
@@ -1810,7 +2206,8 @@ function startCountdown() {
 
         if (
           countdown
-          <= 0
+          <=
+          0
         ) {
 
           clearInterval(
@@ -1845,13 +2242,6 @@ function startRound() {
     roundRunning
   ) {
 
-    /*
-    roundRunning 在結算期間
-    仍為 true。
-
-    先重設。
-    */
-
     roundRunning =
       false;
 
@@ -1868,7 +2258,7 @@ function startRound() {
 
 
   /*
-  建立新的下注單
+  新下注單
   */
 
   currentBetSlip =
@@ -1886,11 +2276,15 @@ function startRound() {
 
 
   /*
-  清理 UI
+  清理下注 UI
   */
 
   renderBetSlip();
 
+
+  /*
+  清理上一局結算 UI
+  */
 
   const settlement =
     getElement(
@@ -1898,10 +2292,16 @@ function startRound() {
     );
 
 
-  if (settlement) {
+  if (
+    settlement
+  ) {
 
     settlement.innerHTML =
-      "";
+      `
+        <div class="settlement-empty">
+          等待本局結算
+        </div>
+      `;
 
   }
 
@@ -1948,7 +2348,9 @@ function setupSoundToggle() {
 
   function renderState() {
 
-    if (icon) {
+    if (
+      icon
+    ) {
 
       icon.src =
         player.soundEnabled
@@ -1967,12 +2369,27 @@ function setupSoundToggle() {
 
     }
 
+
+    button.setAttribute(
+
+      "aria-label",
+
+      player.soundEnabled
+      ? "關閉聲音"
+      : "開啟聲音"
+
+    );
+
   }
 
 
   button.addEventListener(
     "click",
     () => {
+
+      /*
+      關閉聲音前播放一次 click。
+      */
 
       if (
         player.soundEnabled
@@ -2114,11 +2531,9 @@ function setupBackButton() {
 
 
       /*
-      如果仍在下注期間，
-      玩家已下注的本金
-      必須先退回。
-
-      否則直接離開會吃掉下注。
+      如果還在下注期間，
+      玩家已下注但尚未開獎，
+      就把下注本金退回。
       */
 
       if (
@@ -2157,18 +2572,7 @@ function setupBackButton() {
 
 /*
 ========================================
-頁面離開防止未結算下注消失
-
-如果玩家：
-- 重新整理
-- 關閉分頁
-- 直接離開
-
-瀏覽器不保證我們可以可靠
-執行非同步流程。
-
-這裡至少在 pagehide
-嘗試把尚未封盤的下注退回。
+頁面離開
 ========================================
 */
 
@@ -2180,6 +2584,13 @@ function setupPageLifecycle() {
 
       stopRoomBgm();
 
+
+      /*
+      尚未封盤的下注退回。
+
+      避免重新整理 / 關閉頁面
+      吃掉玩家下注本金。
+      */
 
       if (
         bettingOpen
@@ -2197,17 +2608,15 @@ function setupPageLifecycle() {
 
 
         /*
-        防止同一 page lifecycle
+        防止同一 lifecycle
         重複退回。
         */
 
-        currentBetSlip
-          .totalAmount =
+        currentBetSlip.totalAmount =
           0;
 
 
-        currentBetSlip
-          .bets =
+        currentBetSlip.bets =
           [];
 
       }
@@ -2227,24 +2636,31 @@ function setupPageLifecycle() {
 function init() {
 
   /*
-  房間
+  房間資訊
   */
 
   renderRoom();
 
 
   /*
-  玩家
+  玩家餘額
   */
 
   renderBalance();
 
 
   /*
-  預設籌碼
+  籌碼
   */
 
   renderSelectedChip();
+
+
+  /*
+  讀取本倍場既有近 10 期
+  */
+
+  renderRecentRounds();
 
 
   /*
