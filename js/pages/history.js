@@ -8,10 +8,20 @@ pages/history.js
 - 顯示 WIN / LOSE / REFUND
 - 顯示各倍場統計
 - 顯示今日反水預覽
-- 顯示最近 20 局單局詳細紀錄
-- 顯示最近 7 天紀錄
+- 顯示最近 20 局玩家單局詳細紀錄
+- 優先顯示真正開獎期號 drawIssue
+- 顯示最近 7 天統計
 - 返回大廳
 - 聲音開關
+
+資料分工：
+
+draw-history.js
+→ 真正開獎期號
+
+statistics.js
+→ 玩家下注與單局結算
+→ 保存 drawIssue 關聯真正期號
 ========================================
 */
 
@@ -106,11 +116,6 @@ let player =
   getPlayer();
 
 
-/*
-即使玩家資料不存在，
-也允許查看紀錄頁。
-*/
-
 if (!player) {
 
   player = {
@@ -150,11 +155,16 @@ const clickSound =
   );
 
 
-lobbyBgm.loop = true;
+lobbyBgm.loop =
+  true;
 
-lobbyBgm.volume = 0.25;
 
-clickSound.volume = 0.45;
+lobbyBgm.volume =
+  0.25;
+
+
+clickSound.volume =
+  0.45;
 
 
 let bgmStarted =
@@ -249,6 +259,7 @@ function startBgm() {
 function stopBgm() {
 
   lobbyBgm.pause();
+
 
   bgmStarted =
     false;
@@ -408,28 +419,31 @@ function formatTime(
   const hours =
     String(
       date.getHours()
-    ).padStart(
-      2,
-      "0"
-    );
+    )
+      .padStart(
+        2,
+        "0"
+      );
 
 
   const minutes =
     String(
       date.getMinutes()
-    ).padStart(
-      2,
-      "0"
-    );
+    )
+      .padStart(
+        2,
+        "0"
+      );
 
 
   const seconds =
     String(
       date.getSeconds()
-    ).padStart(
-      2,
-      "0"
-    );
+    )
+      .padStart(
+        2,
+        "0"
+      );
 
 
   return (
@@ -439,6 +453,79 @@ function formatTime(
     +
     `${seconds}`
   );
+
+}
+
+
+/*
+========================================
+取得玩家單局顯示用期號
+
+優先順位：
+
+1. drawIssue
+   真正開獎期號
+
+2. playerRecordId
+   新版玩家紀錄 ID
+
+3. issue
+   舊版歷史資料
+
+4. -
+========================================
+*/
+
+function getRoundDisplayIssue(
+  round
+) {
+
+  if (
+    typeof round.drawIssue
+    ===
+    "string"
+    &&
+    round.drawIssue.trim()
+  ) {
+
+    return round
+      .drawIssue
+      .trim();
+
+  }
+
+
+  if (
+    typeof round.playerRecordId
+    ===
+    "string"
+    &&
+    round.playerRecordId.trim()
+  ) {
+
+    return round
+      .playerRecordId
+      .trim();
+
+  }
+
+
+  if (
+    typeof round.issue
+    ===
+    "string"
+    &&
+    round.issue.trim()
+  ) {
+
+    return round
+      .issue
+      .trim();
+
+  }
+
+
+  return "-";
 
 }
 
@@ -1058,6 +1145,10 @@ function renderRebate(
   }
 
 
+  /*
+  目前虧損
+  */
+
   if (
     rebateStats.netProfit
     <
@@ -1102,6 +1193,10 @@ function renderRebate(
 
   }
 
+
+  /*
+  目前盈利
+  */
 
   if (
     rebateStats.netProfit
@@ -1152,7 +1247,7 @@ function renderRebate(
 
 /*
 ========================================
-產生開獎結果標籤
+產生開獎標籤
 ========================================
 */
 
@@ -1166,6 +1261,7 @@ function getDrawLabels(
 
   labels.push(
     {
+
       text:
         draw.size
         ===
@@ -1175,14 +1271,17 @@ function getDrawLabels(
 
         : "小",
 
+
       special:
         false
+
     }
   );
 
 
   labels.push(
     {
+
       text:
         draw.parity
         ===
@@ -1192,8 +1291,10 @@ function getDrawLabels(
 
         : "雙",
 
+
       special:
         false
+
     }
   );
 
@@ -1204,8 +1305,13 @@ function getDrawLabels(
 
     labels.push(
       {
-        text: "含0",
-        special: true
+
+        text:
+          "含0",
+
+        special:
+          true
+
       }
     );
 
@@ -1218,8 +1324,13 @@ function getDrawLabels(
 
     labels.push(
       {
-        text: "對子",
-        special: true
+
+        text:
+          "對子",
+
+        special:
+          true
+
       }
     );
 
@@ -1232,8 +1343,13 @@ function getDrawLabels(
 
     labels.push(
       {
-        text: "豹子",
-        special: true
+
+        text:
+          "豹子",
+
+        special:
+          true
+
       }
     );
 
@@ -1246,8 +1362,13 @@ function getDrawLabels(
 
     labels.push(
       {
-        text: "13",
-        special: true
+
+        text:
+          "13",
+
+        special:
+          true
+
       }
     );
 
@@ -1260,8 +1381,13 @@ function getDrawLabels(
 
     labels.push(
       {
-        text: "14",
-        special: true
+
+        text:
+          "14",
+
+        special:
+          true
+
       }
     );
 
@@ -1316,7 +1442,7 @@ function formatRefundReasons(
 
 /*
 ========================================
-單局詳細紀錄
+最近 20 局玩家詳細紀錄
 ========================================
 */
 
@@ -1370,8 +1496,8 @@ function renderRoundHistory() {
   ) {
 
     /*
-    防止舊版歷史資料沒有 draw
-    導致整頁錯誤。
+    舊資料如果沒有 draw，
+    就跳過。
     */
 
     if (
@@ -1380,6 +1506,10 @@ function renderRoundHistory() {
       !Array.isArray(
         round.draw.numbers
       )
+      ||
+      round.draw.numbers.length
+      !==
+      3
     ) {
 
       continue;
@@ -1399,6 +1529,24 @@ function renderRoundHistory() {
 
     card.className =
       "round-history-card";
+
+
+    /*
+    ================================
+    顯示用真正期號
+
+    新資料：
+    drawIssue
+
+    舊資料：
+    playerRecordId / issue
+    ================================
+    */
+
+    const displayIssue =
+      getRoundDisplayIssue(
+        round
+      );
 
 
     /*
@@ -1564,7 +1712,7 @@ function renderRoundHistory() {
 
     /*
     ================================
-    卡片
+    卡片內容
     ================================
     */
 
@@ -1575,11 +1723,7 @@ function renderRoundHistory() {
           <div class="round-history-title">
 
             <strong>
-              ${
-                round.issue
-                ??
-                "-"
-              }
+              ${displayIssue}
               ·
               ${
                 round.roomId
@@ -1711,7 +1855,9 @@ function renderRoundHistory() {
 
 
     /*
-    單局總盈虧顏色
+    ================================
+    盈虧顏色
+    ================================
     */
 
     const profitElement =
@@ -1727,10 +1873,6 @@ function renderRoundHistory() {
       0
     );
 
-
-    /*
-    Summary 盈虧顏色
-    */
 
     const summaryProfit =
       card.querySelector(
@@ -1754,8 +1896,8 @@ function renderRoundHistory() {
 
 
   /*
-  如果全部都是舊資料，
-  最後仍顯示空狀態。
+  如果查到的都是舊版壞資料，
+  仍然顯示提示。
   */
 
   if (
@@ -1767,7 +1909,7 @@ function renderRoundHistory() {
     container.innerHTML =
       `
         <div class="empty-history">
-          尚無新版單局紀錄
+          尚無可顯示的單局紀錄
         </div>
       `;
 
@@ -2226,12 +2368,6 @@ function setupLifecycle() {
     }
   );
 
-
-  /*
-  從其他頁返回時，
-  若瀏覽器使用 bfcache，
-  重新讀取最新統計。
-  */
 
   window.addEventListener(
     "pageshow",
