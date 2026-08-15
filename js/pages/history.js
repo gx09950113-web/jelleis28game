@@ -8,6 +8,7 @@ pages/history.js
 - 顯示 WIN / LOSE / REFUND
 - 顯示各倍場統計
 - 顯示今日反水預覽
+- 顯示最近 20 局單局詳細紀錄
 - 顯示最近 7 天紀錄
 - 返回大廳
 - 聲音開關
@@ -17,7 +18,8 @@ pages/history.js
 
 import {
   getDailyStats,
-  getRecentStatistics
+  getRecentStatistics,
+  getRecentRounds
 }
 from "../game/statistics.js";
 
@@ -50,6 +52,52 @@ from "../utils/format.js";
 
 /*
 ========================================
+下注名稱
+========================================
+*/
+
+const BET_LABELS = {
+
+  big: "大",
+
+  small: "小",
+
+  odd: "單",
+
+  even: "雙",
+
+  "big-odd": "大單",
+
+  "big-even": "大雙",
+
+  "small-odd": "小單",
+
+  "small-even": "小雙"
+
+};
+
+
+/*
+========================================
+回本原因名稱
+========================================
+*/
+
+const REFUND_REASON_LABELS = {
+
+  "has-zero": "含 0",
+
+  pair: "對子",
+
+  leopard: "豹子",
+
+  "sum-13-14": "和值 13 / 14"
+
+};
+
+
+/*
+========================================
 玩家
 ========================================
 */
@@ -60,9 +108,7 @@ let player =
 
 /*
 即使玩家資料不存在，
-也允許開啟紀錄頁。
-
-只是沒有聲音偏好可以讀。
+也允許查看紀錄頁。
 */
 
 if (!player) {
@@ -134,7 +180,7 @@ function getElement(
 
 /*
 ========================================
-Audio Helper
+播放音效
 ========================================
 */
 
@@ -251,7 +297,9 @@ function formatProfit(
 ) {
 
   const number =
-    Number(value) || 0;
+    Number(value)
+    ||
+    0;
 
 
   if (
@@ -276,7 +324,7 @@ function formatProfit(
 
 /*
 ========================================
-設定盈虧顏色
+套用盈虧顏色
 ========================================
 */
 
@@ -332,7 +380,72 @@ function applyProfitClass(
 
 /*
 ========================================
-今日日期
+時間格式
+========================================
+*/
+
+function formatTime(
+  timestamp
+) {
+
+  if (
+    !Number.isFinite(
+      timestamp
+    )
+  ) {
+
+    return "-";
+
+  }
+
+
+  const date =
+    new Date(
+      timestamp
+    );
+
+
+  const hours =
+    String(
+      date.getHours()
+    ).padStart(
+      2,
+      "0"
+    );
+
+
+  const minutes =
+    String(
+      date.getMinutes()
+    ).padStart(
+      2,
+      "0"
+    );
+
+
+  const seconds =
+    String(
+      date.getSeconds()
+    ).padStart(
+      2,
+      "0"
+    );
+
+
+  return (
+    `${hours}:`
+    +
+    `${minutes}:`
+    +
+    `${seconds}`
+  );
+
+}
+
+
+/*
+========================================
+日期
 ========================================
 */
 
@@ -353,11 +466,6 @@ function renderDate() {
 /*
 ========================================
 建立空白今日資料
-
-statistics.js 在沒有遊戲紀錄時
-getDailyStats() 會回傳 null。
-
-這裡建立 UI 用的 fallback。
 ========================================
 */
 
@@ -546,7 +654,7 @@ function renderResultStats(
 
 /*
 ========================================
-房間 ID 對應 DOM ID
+房間 DOM 對應
 ========================================
 */
 
@@ -565,7 +673,7 @@ const ROOM_DOM_MAP = {
 
 /*
 ========================================
-單一房間統計
+單一房間
 ========================================
 */
 
@@ -639,7 +747,7 @@ function renderRoomStats(
 
 /*
 ========================================
-四倍場統計
+四倍場
 ========================================
 */
 
@@ -747,10 +855,6 @@ function renderRebate(
     );
 
 
-  /*
-  讀取反水計算預覽。
-  */
-
   const preview =
     previewRebate(
       today
@@ -772,10 +876,7 @@ function renderRebate(
 
 
   /*
-  已經處理過
-
-  通常今日不會發生，
-  但歷史資料可能存在。
+  已處理
   */
 
   if (
@@ -824,7 +925,7 @@ function renderRebate(
 
 
   /*
-  今日尚無遊戲
+  尚無有效下注
   */
 
   if (
@@ -858,7 +959,7 @@ function renderRebate(
 
 
   /*
-  符合資格
+  已符合反水
   */
 
   if (
@@ -917,7 +1018,7 @@ function renderRebate(
     ) {
 
       message +=
-        ` 已套用虧損反水上限。`;
+        " 已套用虧損反水上限。";
 
     }
 
@@ -950,106 +1051,725 @@ function renderRebate(
   );
 
 
+  if (!previewElement) {
+
+    return;
+
+  }
+
+
   if (
-    previewElement
+    rebateStats.netProfit
+    <
+    0
   ) {
 
-    /*
-    玩家目前虧損
-    */
+    const loss =
+      Math.abs(
+        rebateStats.netProfit
+      );
+
+
+    const remaining =
+      Math.max(
+        0,
+        3000 - loss
+      );
+
 
     if (
-      rebateStats.netProfit
-      <
-      0
+      remaining > 0
     ) {
 
-      const loss =
-        Math.abs(
-          rebateStats.netProfit
-        );
+      previewElement.textContent =
+        `目前淨虧損 ${formatNumber(
+          loss
+        )}，距離最低虧損反水門檻還差 ${formatNumber(
+          remaining
+        )}。`;
 
+    }
 
-      const remaining =
-        Math.max(
-          0,
-          3000 - loss
-        );
+    else {
 
-
-      if (
-        remaining > 0
-      ) {
-
-        previewElement.textContent =
-          `目前淨虧損 ${formatNumber(
-            loss
-          )}，距離最低虧損反水門檻還差 ${formatNumber(
-            remaining
-          )}。`;
-
-      }
-
-      else {
-
-        previewElement.textContent =
-          "目前尚未符合反水條件。";
-
-      }
-
-
-      return;
+      previewElement.textContent =
+        "目前尚未符合反水條件。";
 
     }
 
 
+    return;
+
+  }
+
+
+  if (
+    rebateStats.netProfit
+    >
+    0
+  ) {
+
+    const remaining =
+      Math.max(
+        0,
+        15000
+        -
+        rebateStats.netProfit
+      );
+
+
+    if (
+      remaining > 0
+    ) {
+
+      previewElement.textContent =
+        `目前淨盈利 ${formatNumber(
+          rebateStats.netProfit
+        )}，距離最低盈利反水門檻還差 ${formatNumber(
+          remaining
+        )}。`;
+
+    }
+
+    else {
+
+      previewElement.textContent =
+        "目前尚未符合反水條件。";
+
+    }
+
+
+    return;
+
+  }
+
+
+  previewElement.textContent =
+    "目前淨盈虧為 0，尚未達反水門檻。";
+
+}
+
+
+/*
+========================================
+產生開獎結果標籤
+========================================
+*/
+
+function getDrawLabels(
+  draw
+) {
+
+  const labels =
+    [];
+
+
+  labels.push(
+    {
+      text:
+        draw.size
+        ===
+        "big"
+
+        ? "大"
+
+        : "小",
+
+      special:
+        false
+    }
+  );
+
+
+  labels.push(
+    {
+      text:
+        draw.parity
+        ===
+        "odd"
+
+        ? "單"
+
+        : "雙",
+
+      special:
+        false
+    }
+  );
+
+
+  if (
+    draw.hasZero
+  ) {
+
+    labels.push(
+      {
+        text: "含0",
+        special: true
+      }
+    );
+
+  }
+
+
+  if (
+    draw.isPair
+  ) {
+
+    labels.push(
+      {
+        text: "對子",
+        special: true
+      }
+    );
+
+  }
+
+
+  if (
+    draw.isLeopard
+  ) {
+
+    labels.push(
+      {
+        text: "豹子",
+        special: true
+      }
+    );
+
+  }
+
+
+  if (
+    draw.isSum13
+  ) {
+
+    labels.push(
+      {
+        text: "13",
+        special: true
+      }
+    );
+
+  }
+
+
+  if (
+    draw.isSum14
+  ) {
+
+    labels.push(
+      {
+        text: "14",
+        special: true
+      }
+    );
+
+  }
+
+
+  return labels;
+
+}
+
+
+/*
+========================================
+回本原因文字
+========================================
+*/
+
+function formatRefundReasons(
+  reasons
+) {
+
+  if (
+    !Array.isArray(
+      reasons
+    )
+    ||
+    reasons.length
+    ===
+    0
+  ) {
+
+    return "";
+
+  }
+
+
+  return reasons
+    .map(
+      reason =>
+        REFUND_REASON_LABELS[
+          reason
+        ]
+        ??
+        reason
+    )
+    .join(
+      "、"
+    );
+
+}
+
+
+/*
+========================================
+單局詳細紀錄
+========================================
+*/
+
+function renderRoundHistory() {
+
+  const container =
+    getElement(
+      "round-history"
+    );
+
+
+  if (!container) {
+
+    return;
+
+  }
+
+
+  const rounds =
+    getRecentRounds(
+      20
+    );
+
+
+  container.innerHTML =
+    "";
+
+
+  if (
+    rounds.length
+    ===
+    0
+  ) {
+
+    container.innerHTML =
+      `
+        <div class="empty-history">
+          尚無單局紀錄
+        </div>
+      `;
+
+
+    return;
+
+  }
+
+
+  for (
+    const round
+    of rounds
+  ) {
+
     /*
-    玩家目前盈利
+    防止舊版歷史資料沒有 draw
+    導致整頁錯誤。
     */
 
     if (
-      rebateStats.netProfit
+      !round.draw
+      ||
+      !Array.isArray(
+        round.draw.numbers
+      )
+    ) {
+
+      continue;
+
+    }
+
+
+    const draw =
+      round.draw;
+
+
+    const card =
+      document.createElement(
+        "article"
+      );
+
+
+    card.className =
+      "round-history-card";
+
+
+    /*
+    ================================
+    開獎標籤
+    ================================
+    */
+
+    const labels =
+      getDrawLabels(
+        draw
+      );
+
+
+    const labelsHtml =
+      labels
+        .map(
+          label =>
+            `
+              <span
+                class="
+                  result-badge
+                  ${
+                    label.special
+                    ? "special"
+                    : ""
+                  }
+                "
+              >
+                ${label.text}
+              </span>
+            `
+        )
+        .join(
+          ""
+        );
+
+
+    /*
+    ================================
+    下注明細
+    ================================
+    */
+
+    let betsHtml =
+      "";
+
+
+    if (
+      Array.isArray(
+        round.bets
+      )
+      &&
+      round.bets.length
       >
       0
     ) {
 
-      const remaining =
-        Math.max(
-          0,
-          15000
-          -
-          rebateStats.netProfit
-        );
+      betsHtml =
+        round.bets
+          .map(
+            bet => {
+
+              const typeLabel =
+                BET_LABELS[
+                  bet.type
+                ]
+                ??
+                bet.type;
 
 
-      if (
-        remaining > 0
-      ) {
-
-        previewElement.textContent =
-          `目前淨盈利 ${formatNumber(
-            rebateStats.netProfit
-          )}，距離最低盈利反水門檻還差 ${formatNumber(
-            remaining
-          )}。`;
-
-      }
-
-      else {
-
-        previewElement.textContent =
-          "目前尚未符合反水條件。";
-
-      }
+              const result =
+                bet.result
+                ??
+                "lose";
 
 
-      return;
+              const resultText =
+                result
+                  .toUpperCase();
+
+
+              const refundReason =
+                result
+                ===
+                "refund"
+
+                ? formatRefundReasons(
+                    bet.refundReasons
+                  )
+
+                : "";
+
+
+              const refundReasonHtml =
+                refundReason
+
+                ? `
+                  <div class="round-refund-reason">
+                    回本原因：${refundReason}
+                  </div>
+                `
+
+                : "";
+
+
+              return `
+                <div class="round-bet-row">
+
+                  <span class="round-bet-type">
+                    ${typeLabel}
+                  </span>
+
+                  <span class="round-bet-amount">
+                    下注 ${formatNumber(
+                      bet.amount
+                      ??
+                      0
+                    )}
+                  </span>
+
+                  <strong
+                    class="
+                      round-bet-result
+                      ${result}
+                    "
+                  >
+                    ${resultText}
+                  </strong>
+
+                  <span class="round-bet-payout">
+                    返還 ${formatNumber(
+                      bet.payout
+                      ??
+                      0
+                    )}
+                  </span>
+
+                  ${refundReasonHtml}
+
+                </div>
+              `;
+
+            }
+          )
+          .join(
+            ""
+          );
+
+    }
+
+    else {
+
+      betsHtml =
+        `
+          <div class="empty-history">
+            無下注明細
+          </div>
+        `;
 
     }
 
 
-    previewElement.textContent =
-      "目前淨盈虧為 0，尚未達反水門檻。";
+    /*
+    ================================
+    卡片
+    ================================
+    */
+
+    card.innerHTML =
+      `
+        <div class="round-history-header">
+
+          <div class="round-history-title">
+
+            <strong>
+              ${
+                round.issue
+                ??
+                "-"
+              }
+              ·
+              ${
+                round.roomId
+                ??
+                "-"
+              }倍場
+            </strong>
+
+            <span>
+              ${
+                round.date
+                ??
+                ""
+              }
+              ${
+                formatTime(
+                  round.settledAt
+                )
+              }
+            </span>
+
+          </div>
+
+
+          <strong
+            class="round-history-profit"
+          >
+            ${formatProfit(
+              round.netProfit
+              ??
+              0
+            )}
+          </strong>
+
+        </div>
+
+
+        <div class="round-draw">
+
+          <div class="round-draw-numbers">
+
+            ${draw.numbers[0]}
+            +
+            ${draw.numbers[1]}
+            +
+            ${draw.numbers[2]}
+            =
+            ${draw.sum}
+
+          </div>
+
+
+          <div class="round-draw-result">
+
+            ${labelsHtml}
+
+          </div>
+
+        </div>
+
+
+        <div class="round-summary">
+
+          <div class="round-summary-item">
+
+            <span>
+              本局下注
+            </span>
+
+            <strong>
+              ${formatNumber(
+                round.totalBet
+                ??
+                0
+              )}
+            </strong>
+
+          </div>
+
+
+          <div class="round-summary-item">
+
+            <span>
+              本局返還
+            </span>
+
+            <strong>
+              ${formatNumber(
+                round.totalPayout
+                ??
+                0
+              )}
+            </strong>
+
+          </div>
+
+
+          <div class="round-summary-item">
+
+            <span>
+              本局盈虧
+            </span>
+
+            <strong
+              class="round-summary-profit"
+            >
+              ${formatProfit(
+                round.netProfit
+                ??
+                0
+              )}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="round-bets">
+
+          <div class="round-bets-title">
+            下注明細
+          </div>
+
+          ${betsHtml}
+
+        </div>
+      `;
+
+
+    /*
+    單局總盈虧顏色
+    */
+
+    const profitElement =
+      card.querySelector(
+        ".round-history-profit"
+      );
+
+
+    applyProfitClass(
+      profitElement,
+      round.netProfit
+      ??
+      0
+    );
+
+
+    /*
+    Summary 盈虧顏色
+    */
+
+    const summaryProfit =
+      card.querySelector(
+        ".round-summary-profit"
+      );
+
+
+    applyProfitClass(
+      summaryProfit,
+      round.netProfit
+      ??
+      0
+    );
+
+
+    container.appendChild(
+      card
+    );
+
+  }
+
+
+  /*
+  如果全部都是舊資料，
+  最後仍顯示空狀態。
+  */
+
+  if (
+    container.children.length
+    ===
+    0
+  ) {
+
+    container.innerHTML =
+      `
+        <div class="empty-history">
+          尚無新版單局紀錄
+        </div>
+      `;
 
   }
 
@@ -1058,7 +1778,7 @@ function renderRebate(
 
 /*
 ========================================
-最近七天歷史
+最近七天
 ========================================
 */
 
@@ -1096,12 +1816,14 @@ function renderHistoryTable() {
     body.innerHTML =
       `
         <tr>
+
           <td
             colspan="6"
             class="empty-history"
           >
             尚無遊戲紀錄
           </td>
+
         </tr>
       `;
 
@@ -1122,10 +1844,6 @@ function renderHistoryTable() {
       );
 
 
-    /*
-    每日盈虧
-    */
-
     const profit =
       dayStats.total
         ?.netProfit
@@ -1134,7 +1852,9 @@ function renderHistoryTable() {
 
 
     /*
-    反水文字
+    ================================
+    反水欄
+    ================================
     */
 
     let rebateText =
@@ -1169,11 +1889,6 @@ function renderHistoryTable() {
     }
 
     else {
-
-      /*
-      尚未結算，
-      可以顯示目前預估。
-      */
 
       const preview =
         previewRebate(
@@ -1210,15 +1925,19 @@ function renderHistoryTable() {
 
         <td>
           ${formatNumber(
-            dayStats.total?.validBet
-            ?? 0
+            dayStats.total
+              ?.validBet
+            ??
+            0
           )}
         </td>
 
         <td>
           ${formatNumber(
-            dayStats.total?.payout
-            ?? 0
+            dayStats.total
+              ?.payout
+            ??
+            0
           )}
         </td>
 
@@ -1232,8 +1951,10 @@ function renderHistoryTable() {
 
         <td>
           ${formatNumber(
-            dayStats.total?.rounds
-            ?? 0
+            dayStats.total
+              ?.rounds
+            ??
+            0
           )}
         </td>
 
@@ -1388,11 +2109,6 @@ function setupSoundToggle() {
         !player.soundEnabled;
 
 
-      /*
-      只有真的存在玩家資料時
-      才寫回 localStorage。
-      */
-
       if (
         getPlayer()
       ) {
@@ -1512,10 +2228,9 @@ function setupLifecycle() {
 
 
   /*
-  從其他頁面返回時，
-  某些瀏覽器使用 bfcache。
-
-  此時重新渲染統計資料。
+  從其他頁返回時，
+  若瀏覽器使用 bfcache，
+  重新讀取最新統計。
   */
 
   window.addEventListener(
@@ -1580,6 +2295,9 @@ function renderAllStatistics() {
   renderRebate(
     stats
   );
+
+
+  renderRoundHistory();
 
 
   renderHistoryTable();
