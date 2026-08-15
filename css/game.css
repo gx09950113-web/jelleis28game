@@ -1,0 +1,1555 @@
+/*
+========================================
+28 GAME LAB
+game.css
+
+遊戲頁專用樣式
+========================================
+*/
+
+
+/* ========================================
+   基本頁面
+======================================== */
+
+body {
+  margin: 0;
+
+  min-height: 100vh;
+
+  color: #f5f7fb;
+
+  background-color: #0b1020;
+
+  background-image:
+    linear-gradient(
+      rgba(5, 10, 18, 0.60),
+      rgba(5, 10, 18, 0.86)
+    ),
+    url("../assets/images/game-bg.webp");
+
+  background-size: cover;
+
+  background-position: center;
+
+  background-attachment: fixed;
+
+  font-family:
+    "Noto Sans TC",
+    "Microsoft JhengHei",
+    sans-serif;
+}
+
+
+button {
+  font: inherit;
+}
+
+
+button:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.45;
+}
+
+
+/* ========================================
+   整體
+======================================== */
+
+.game-app {
+  width: min(
+    1440px,
+    calc(100% - 32px)
+  );
+
+  margin: 0 auto;
+
+  padding-bottom: 40px;
+}
+
+
+/* ========================================
+   頂部導覽
+======================================== */
+
+.game-header {
+  position: sticky;
+
+  top: 0;
+
+  z-index: 50;
+
+  min-height: 76px;
+
+  padding: 12px 18px;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    auto
+    1fr;
+
+  align-items: center;
+
+  gap: 20px;
+
+  border-bottom:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.10
+    );
+
+  background:
+    rgba(
+      10,
+      15,
+      26,
+      0.86
+    );
+
+  backdrop-filter:
+    blur(14px);
+
+  -webkit-backdrop-filter:
+    blur(14px);
+}
+
+
+.header-left {
+  display: flex;
+
+  justify-content: flex-start;
+}
+
+
+.header-center {
+  text-align: center;
+}
+
+
+.header-right {
+  display: flex;
+
+  justify-content: flex-end;
+
+  align-items: center;
+
+  gap: 14px;
+}
+
+
+/* ========================================
+   通用 icon button
+======================================== */
+
+.icon-button {
+  min-height: 44px;
+
+  padding: 10px 14px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.12
+    );
+
+  border-radius: 12px;
+
+  color: #f5f7fb;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.06
+    );
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+
+.icon-button:hover {
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.11
+    );
+
+  border-color:
+    rgba(
+      255,
+      255,
+      255,
+      0.22
+    );
+
+  transform:
+    translateY(-1px);
+}
+
+
+.icon-button img {
+  width: 21px;
+
+  height: 21px;
+
+  object-fit: contain;
+}
+
+
+.sound-button {
+  width: 46px;
+
+  padding: 10px;
+}
+
+
+/* ========================================
+   房間名稱
+======================================== */
+
+.room-title {
+  display: flex;
+
+  align-items: baseline;
+
+  justify-content: center;
+
+  gap: 10px;
+}
+
+
+.room-name {
+  font-size: 22px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.04em;
+}
+
+
+.room-multiplier {
+  color: #ffd966;
+
+  font-size: 18px;
+
+  font-weight: 800;
+}
+
+
+/* ========================================
+   錢包
+======================================== */
+
+.wallet-display {
+  min-width: 150px;
+
+  padding: 8px 12px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.10
+    );
+
+  border-radius: 12px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.05
+    );
+}
+
+
+.wallet-icon {
+  width: 28px;
+
+  height: 28px;
+
+  object-fit: contain;
+}
+
+
+.wallet-info {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+
+.wallet-label {
+  color: #aab2c4;
+
+  font-size: 11px;
+}
+
+
+.wallet-balance {
+  color: #ffd966;
+
+  font-size: 18px;
+}
+
+
+/* ========================================
+   主版面
+======================================== */
+
+.game-layout {
+  padding-top: 24px;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    320px;
+
+  gap: 22px;
+}
+
+
+.game-main {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+
+.game-sidebar {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+
+/* ========================================
+   通用 panel
+======================================== */
+
+.game-status-panel,
+.draw-panel,
+.betting-panel,
+.chip-panel,
+.sidebar-panel {
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.10
+    );
+
+  border-radius: 18px;
+
+  background:
+    rgba(
+      16,
+      23,
+      39,
+      0.88
+    );
+
+  box-shadow:
+    0 16px 50px
+    rgba(
+      0,
+      0,
+      0,
+      0.22
+    );
+
+  backdrop-filter:
+    blur(8px);
+
+  -webkit-backdrop-filter:
+    blur(8px);
+}
+
+
+.panel-title {
+  margin-bottom: 18px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+
+.panel-title h2 {
+  margin: 0;
+
+  font-size: 18px;
+
+  font-weight: 800;
+}
+
+
+.panel-description {
+  color: #9ea8ba;
+
+  font-size: 12px;
+}
+
+
+/* ========================================
+   遊戲狀態
+======================================== */
+
+.game-status-panel {
+  padding: 16px 22px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+
+.game-status {
+  color: #7dd3fc;
+
+  font-size: 18px;
+
+  font-weight: 800;
+}
+
+
+.countdown-area {
+  display: flex;
+
+  align-items: baseline;
+
+  gap: 8px;
+}
+
+
+.countdown-label {
+  color: #9ea8ba;
+
+  font-size: 13px;
+}
+
+
+.countdown {
+  min-width: 38px;
+
+  color: #ffd966;
+
+  font-size: 30px;
+
+  font-weight: 900;
+
+  text-align: center;
+}
+
+
+.countdown-unit {
+  color: #9ea8ba;
+
+  font-size: 12px;
+}
+
+
+/* ========================================
+   開獎區
+======================================== */
+
+.draw-panel {
+  padding: 26px;
+}
+
+
+.draw-numbers {
+  margin: 22px 0 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 16px;
+}
+
+
+.number-ball {
+  width: 88px;
+
+  height: 88px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border:
+    2px solid rgba(
+      255,
+      255,
+      255,
+      0.16
+    );
+
+  border-radius: 50%;
+
+  color: #ffffff;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #3d4f73,
+      #182238 70%
+    );
+
+  box-shadow:
+    inset
+    0 6px 15px
+    rgba(
+      255,
+      255,
+      255,
+      0.10
+    ),
+    0 12px 24px
+    rgba(
+      0,
+      0,
+      0,
+      0.35
+    );
+
+  font-size: 34px;
+
+  font-weight: 900;
+}
+
+
+.number-plus {
+  color: #8f9bad;
+
+  font-size: 28px;
+
+  font-weight: 800;
+}
+
+
+.sum-area {
+  margin-top: 8px;
+
+  display: flex;
+
+  align-items: baseline;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  color: #a8b0c0;
+}
+
+
+.draw-sum {
+  color: #ffffff;
+
+  font-size: 32px;
+
+  font-weight: 900;
+}
+
+
+.draw-result {
+  margin-top: 14px;
+
+  min-height: 40px;
+
+  padding: 10px 16px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 12px;
+
+  color: #d7e0ee;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.05
+    );
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  text-align: center;
+}
+
+
+/* ========================================
+   下注區
+======================================== */
+
+.betting-panel {
+  padding: 24px;
+}
+
+
+.bet-section + .bet-section {
+  margin-top: 22px;
+}
+
+
+.bet-section-title {
+  margin-bottom: 10px;
+
+  color: #a9b1c2;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+
+.bet-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 10px;
+}
+
+
+.bet-button {
+  min-height: 82px;
+
+  padding: 12px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 5px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.11
+    );
+
+  border-radius: 14px;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(
+        45,
+        60,
+        88,
+        0.84
+      ),
+      rgba(
+        27,
+        37,
+        57,
+        0.92
+      )
+    );
+
+  cursor: pointer;
+
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease,
+    filter 0.16s ease;
+}
+
+
+.bet-button:hover:not(:disabled) {
+  transform:
+    translateY(-2px);
+
+  border-color:
+    rgba(
+      96,
+      165,
+      250,
+      0.7
+    );
+
+  box-shadow:
+    0 8px 24px
+    rgba(
+      0,
+      0,
+      0,
+      0.22
+    );
+
+  filter:
+    brightness(1.08);
+}
+
+
+.bet-button:active:not(:disabled) {
+  transform:
+    translateY(0);
+}
+
+
+.bet-button strong {
+  font-size: 22px;
+
+  font-weight: 900;
+}
+
+
+.bet-button span {
+  color: #9da8ba;
+
+  font-size: 10px;
+
+  letter-spacing: 0.08em;
+}
+
+
+.bet-button.combo {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(
+        61,
+        47,
+        88,
+        0.86
+      ),
+      rgba(
+        34,
+        28,
+        55,
+        0.92
+      )
+    );
+}
+
+
+/* ========================================
+   籌碼
+======================================== */
+
+.chip-panel {
+  padding: 22px 24px;
+}
+
+
+.chip-list {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 12px;
+}
+
+
+.chip-button {
+  width: 74px;
+
+  height: 74px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border:
+    3px dashed rgba(
+      255,
+      255,
+      255,
+      0.24
+    );
+
+  border-radius: 50%;
+
+  color: #e8ecf4;
+
+  background:
+    radial-gradient(
+      circle,
+      #374761 0%,
+      #223049 65%,
+      #152033 100%
+    );
+
+  box-shadow:
+    0 7px 18px
+    rgba(
+      0,
+      0,
+      0,
+      0.30
+    );
+
+  font-size: 15px;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+
+.chip-button:hover:not(:disabled) {
+  transform:
+    translateY(-2px);
+}
+
+
+.chip-button.selected {
+  border-style: solid;
+
+  border-color: #ffd966;
+
+  color: #231a00;
+
+  background:
+    radial-gradient(
+      circle,
+      #ffe89b 0%,
+      #f6c64b 68%,
+      #c58f16 100%
+    );
+
+  box-shadow:
+    0 0 0 4px
+    rgba(
+      255,
+      217,
+      102,
+      0.12
+    ),
+    0 10px 25px
+    rgba(
+      0,
+      0,
+      0,
+      0.35
+    );
+}
+
+
+/* ========================================
+   Sidebar
+======================================== */
+
+.sidebar-panel {
+  padding: 20px;
+}
+
+
+.current-bets {
+  min-height: 145px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+
+.empty-bets,
+.settlement-empty {
+  min-height: 90px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #7f8999;
+
+  font-size: 13px;
+
+  text-align: center;
+}
+
+
+.bet-summary-item {
+  padding: 10px 12px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
+
+  border-radius: 10px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.04
+    );
+}
+
+
+.bet-summary-item span {
+  color: #cbd2df;
+}
+
+
+.bet-summary-item strong {
+  color: #ffd966;
+}
+
+
+.bet-total-row {
+  margin-top: 14px;
+
+  padding-top: 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  border-top:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.09
+    );
+
+  color: #aab2c0;
+}
+
+
+.bet-total-row strong {
+  color: #ffffff;
+
+  font-size: 20px;
+}
+
+
+.clear-bets-button {
+  width: 100%;
+
+  margin-top: 16px;
+
+  padding: 11px 14px;
+
+  border:
+    1px solid rgba(
+      248,
+      113,
+      113,
+      0.32
+    );
+
+  border-radius: 11px;
+
+  color: #fca5a5;
+
+  background:
+    rgba(
+      127,
+      29,
+      29,
+      0.14
+    );
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
+
+
+.clear-bets-button:hover:not(:disabled) {
+  border-color:
+    rgba(
+      248,
+      113,
+      113,
+      0.60
+    );
+
+  background:
+    rgba(
+      127,
+      29,
+      29,
+      0.24
+    );
+}
+
+
+/* ========================================
+   結算
+======================================== */
+
+.settlement-result {
+  min-height: 130px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+
+.settlement-result > div:not(.settlement-empty) {
+  padding: 9px 0;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 16px;
+
+  border-bottom:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.07
+    );
+
+  color: #adb6c7;
+}
+
+
+.settlement-result > div:last-child {
+  border-bottom: 0;
+}
+
+
+.settlement-result strong {
+  color: #ffffff;
+}
+
+
+/* ========================================
+   提示區
+======================================== */
+
+.room-notice {
+  padding: 16px 18px;
+}
+
+
+.info-row {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 10px;
+}
+
+
+.info-row img {
+  width: 18px;
+
+  height: 18px;
+
+  margin-top: 2px;
+
+  opacity: 0.7;
+}
+
+
+.info-row p {
+  margin: 0;
+
+  color: #8f99aa;
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+
+/* ========================================
+   Toast
+======================================== */
+
+.toast {
+  position: fixed;
+
+  z-index: 200;
+
+  left: 50%;
+
+  bottom: 28px;
+
+  width: min(
+    460px,
+    calc(100% - 28px)
+  );
+
+  padding: 16px 18px;
+
+  transform:
+    translate(
+      -50%,
+      calc(100% + 60px)
+    );
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.14
+    );
+
+  border-radius: 14px;
+
+  background:
+    rgba(
+      24,
+      32,
+      48,
+      0.96
+    );
+
+  box-shadow:
+    0 18px 45px
+    rgba(
+      0,
+      0,
+      0,
+      0.35
+    );
+
+  transition:
+    transform 0.26s ease,
+    opacity 0.26s ease;
+}
+
+
+.toast.show {
+  transform:
+    translate(
+      -50%,
+      0
+    );
+
+  opacity: 1;
+}
+
+
+.toast-title {
+  margin-bottom: 5px;
+
+  color: #ffffff;
+
+  font-size: 15px;
+
+  font-weight: 800;
+}
+
+
+.toast-message {
+  color: #adb6c7;
+
+  font-size: 13px;
+
+  line-height: 1.55;
+}
+
+
+/* ========================================
+   Tablet
+======================================== */
+
+@media (
+  max-width: 1024px
+) {
+
+  .game-layout {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .game-sidebar {
+    display: grid;
+
+    grid-template-columns:
+      1fr
+      1fr;
+
+    align-items: start;
+  }
+
+
+  .room-notice {
+    grid-column:
+      1 / -1;
+  }
+
+}
+
+
+/* ========================================
+   小尺寸平板 / 大手機
+======================================== */
+
+@media (
+  max-width: 760px
+) {
+
+  .game-app {
+    width:
+      min(
+        100% - 20px,
+        1440px
+      );
+  }
+
+
+  .game-header {
+    position: static;
+
+    grid-template-columns:
+      1fr
+      auto;
+
+    gap: 12px;
+  }
+
+
+  .header-center {
+    grid-column:
+      1 / -1;
+
+    grid-row: 1;
+
+    order: -1;
+  }
+
+
+  .header-left {
+    grid-column: 1;
+
+    grid-row: 2;
+  }
+
+
+  .header-right {
+    grid-column: 2;
+
+    grid-row: 2;
+  }
+
+
+  .back-button span {
+    display: none;
+  }
+
+
+  .wallet-display {
+    min-width: auto;
+  }
+
+
+  .wallet-label {
+    display: none;
+  }
+
+
+  .game-layout {
+    padding-top: 16px;
+  }
+
+
+  .game-status-panel {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+
+  .draw-numbers {
+    gap: 10px;
+  }
+
+
+  .number-ball {
+    width: 72px;
+
+    height: 72px;
+
+    font-size: 29px;
+  }
+
+
+  .number-plus {
+    font-size: 22px;
+  }
+
+
+  .bet-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+
+  .chip-list {
+    justify-content: center;
+  }
+
+
+  .game-sidebar {
+    display: flex;
+  }
+
+}
+
+
+/* ========================================
+   手機
+======================================== */
+
+@media (
+  max-width: 480px
+) {
+
+  .game-app {
+    width:
+      calc(100% - 14px);
+  }
+
+
+  .game-header {
+    padding:
+      10px 6px;
+  }
+
+
+  .room-name {
+    font-size: 18px;
+  }
+
+
+  .room-multiplier {
+    font-size: 15px;
+  }
+
+
+  .wallet-balance {
+    font-size: 15px;
+  }
+
+
+  .wallet-display {
+    padding:
+      7px 9px;
+  }
+
+
+  .wallet-icon {
+    width: 22px;
+
+    height: 22px;
+  }
+
+
+  .game-status-panel,
+  .draw-panel,
+  .betting-panel,
+  .chip-panel,
+  .sidebar-panel {
+    border-radius: 14px;
+  }
+
+
+  .draw-panel,
+  .betting-panel,
+  .chip-panel {
+    padding: 18px;
+  }
+
+
+  .draw-numbers {
+    gap: 6px;
+  }
+
+
+  .number-ball {
+    width: 62px;
+
+    height: 62px;
+
+    font-size: 25px;
+  }
+
+
+  .number-plus {
+    font-size: 18px;
+  }
+
+
+  .draw-sum {
+    font-size: 28px;
+  }
+
+
+  .bet-button {
+    min-height: 72px;
+  }
+
+
+  .bet-button strong {
+    font-size: 20px;
+  }
+
+
+  .chip-button {
+    width: 61px;
+
+    height: 61px;
+
+    font-size: 13px;
+  }
+
+
+  .countdown {
+    font-size: 26px;
+  }
+
+}
+
+
+/* ========================================
+   超小手機
+======================================== */
+
+@media (
+  max-width: 360px
+) {
+
+  .draw-numbers {
+    gap: 4px;
+  }
+
+
+  .number-ball {
+    width: 54px;
+
+    height: 54px;
+
+    font-size: 22px;
+  }
+
+
+  .number-plus {
+    font-size: 15px;
+  }
+
+
+  .chip-list {
+    gap: 8px;
+  }
+
+
+  .chip-button {
+    width: 54px;
+
+    height: 54px;
+  }
+
+}
