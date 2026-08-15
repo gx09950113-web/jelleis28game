@@ -19,6 +19,7 @@ pages/game.js
 - 發放返還代幣
 - 記錄玩家每日統計
 - 記錄玩家單局詳細紀錄
+- 將玩家單局紀錄關聯至真正開獎期號
 - 房間 BGM
 - 遊戲音效
 - 返回大廳
@@ -26,12 +27,14 @@ pages/game.js
 資料分工：
 
 draw-history.js
-→ 不論玩家是否下注
-  都記錄每一期開獎
+→ 所有開獎期數
+→ 不論玩家是否下注都保存
+→ 產生真正開獎期號
 
 statistics.js
-→ 只有玩家有下注時
-  才記錄玩家統計與結算
+→ 玩家有下注才保存
+→ 保存玩家單局結算
+→ 保存 drawIssue 關聯真正期號
 
 不負責：
 - 定義遊戲規則
@@ -98,12 +101,6 @@ import {
 from "../game/statistics.js";
 
 
-/*
-========================================
-真正的開獎歷史
-========================================
-*/
-
 import {
   recordDraw,
   getRecentDraws
@@ -140,8 +137,7 @@ const GAME_CONFIG = {
 
 
   /*
-  開獎完成後，
-  幾秒後進入下一局
+  開獎完成後多久開始下一局
   */
 
   nextRoundDelay: 5000
@@ -203,12 +199,6 @@ let player =
 
 
 if (!player) {
-
-  /*
-  如果玩家沒有先經過首頁建立資料，
-  直接進 game.html，
-  就送回首頁。
-  */
 
   window.location.href =
     "./index.html";
@@ -345,24 +335,40 @@ const refundSound =
 ========================================
 */
 
-roomBgm.loop = true;
+roomBgm.loop =
+  true;
 
-roomBgm.volume = 0.32;
+
+roomBgm.volume =
+  0.32;
 
 
-clickSound.volume = 0.45;
+clickSound.volume =
+  0.45;
 
-betSound.volume = 0.6;
 
-countdownSound.volume = 0.65;
+betSound.volume =
+  0.6;
 
-drawSound.volume = 0.7;
 
-winSound.volume = 0.75;
+countdownSound.volume =
+  0.65;
 
-loseSound.volume = 0.5;
 
-refundSound.volume = 0.65;
+drawSound.volume =
+  0.7;
+
+
+winSound.volume =
+  0.75;
+
+
+loseSound.volume =
+  0.5;
+
+
+refundSound.volume =
+  0.65;
 
 
 let bgmStarted =
@@ -548,6 +554,7 @@ function stopRoomBgm() {
 
   roomBgm.pause();
 
+
   bgmStarted =
     false;
 
@@ -646,10 +653,6 @@ function renderRoom() {
 
   }
 
-
-  /*
-  房間背景
-  */
 
   if (
     room.image
@@ -1043,10 +1046,6 @@ function placeBet(
   }
 
 
-  /*
-  檢查餘額
-  */
-
   if (
     !canAfford(
       selectedChip
@@ -1069,10 +1068,6 @@ function placeBet(
   }
 
 
-  /*
-  先扣錢
-  */
-
   const deducted =
     subtractBalance(
       selectedChip
@@ -1092,13 +1087,6 @@ function placeBet(
 
   }
 
-
-  /*
-  建立下注。
-
-  如果 addBet 發生錯誤，
-  把剛才扣掉的本金退回。
-  */
 
   try {
 
@@ -1187,10 +1175,6 @@ function setupBetButtons() {
 /*
 ========================================
 清空下注
-========================================
-
-下注時已經扣除本金，
-所以清空下注時必須退回。
 ========================================
 */
 
@@ -1465,15 +1449,6 @@ function renderDrawResult(
 ========================================
 真正的近 10 期
 ========================================
-
-資料來源：
-draw-history.js
-
-與玩家是否下注無關。
-
-只要該房間真的開過獎，
-就會出現在這裡。
-========================================
 */
 
 function renderRecentRounds() {
@@ -1607,13 +1582,6 @@ function renderRecentRounds() {
 
     }
 
-
-    /*
-    13 / 14 也顯示。
-
-    這只是描述開獎結果，
-    不代表所有倍場都會回本。
-    */
 
     if (
       draw.isSum13
@@ -1837,11 +1805,6 @@ function playSettlementSound(
   settlement
 ) {
 
-  /*
-  玩家沒有下注，
-  不播放輸贏音效。
-  */
-
   if (
     settlement.totalBet
     <=
@@ -1852,10 +1815,6 @@ function playSettlementSound(
 
   }
 
-
-  /*
-  全部都是 REFUND
-  */
 
   if (
     settlement.refundCount
@@ -1881,10 +1840,6 @@ function playSettlementSound(
   }
 
 
-  /*
-  整體盈利
-  */
-
   if (
     settlement.netProfit
     >
@@ -1901,10 +1856,6 @@ function playSettlementSound(
   }
 
 
-  /*
-  整體虧損
-  */
-
   if (
     settlement.netProfit
     <
@@ -1920,10 +1871,6 @@ function playSettlementSound(
 
   }
 
-
-  /*
-  0 盈虧且包含 REFUND
-  */
 
   if (
     settlement.refundCount
@@ -1949,13 +1896,6 @@ function playSettlementSound(
 function applySettlement(
   settlement
 ) {
-
-  /*
-  玩家下注時本金已扣除。
-
-  所以這裡只要把
-  totalPayout 加回錢包。
-  */
 
   if (
     settlement.totalPayout
@@ -2019,12 +1959,13 @@ function executeDraw() {
 
   /*
   ================================
-  3. 無條件保存真正的開獎歷史
+  3. 保存真正開獎歷史
 
-  這一步與玩家有沒有下注無關。
+  不管玩家有沒有下注，
+  都會產生真正開獎期號。
 
-  只要這一期有開獎，
-  就寫入 draw-history.js。
+  例如：
+  28-20260816-000007
   ================================
   */
 
@@ -2033,27 +1974,6 @@ function executeDraw() {
       roomId,
       drawResult
     );
-
-
-  /*
-  drawRecord 目前包含：
-
-  {
-    issue,
-    sequence,
-    roomId,
-    numbers,
-    sum,
-    ...
-  }
-
-  後面如果要讓玩家結算
-  與真正開獎期號互相關聯，
-  可以再把 drawRecord.issue
-  傳進 statistics.js。
-  */
-
-  void drawRecord;
 
 
   /*
@@ -2070,9 +1990,6 @@ function executeDraw() {
   /*
   ================================
   5. 結算玩家下注
-
-  即使玩家沒下注，
-  settlement 仍然可以正常產生。
   ================================
   */
 
@@ -2085,7 +2002,7 @@ function executeDraw() {
 
   /*
   ================================
-  6. 發放玩家返還
+  6. 發放返還
   ================================
   */
 
@@ -2096,14 +2013,18 @@ function executeDraw() {
 
   /*
   ================================
-  7. 玩家有下注時，
-  才寫入玩家統計。
+  7. 玩家有下注時才記錄玩家統計
 
-  draw-history.js：
-  所有期數
+  關鍵修改就在這裡：
 
-  statistics.js：
-  玩家參與期數
+  drawRecord.issue
+  ↓
+  傳給 statistics.js
+  ↓
+  保存為 drawIssue
+
+  於是玩家紀錄就知道自己
+  對應的是哪一期真正開獎。
   ================================
   */
 
@@ -2114,8 +2035,13 @@ function executeDraw() {
   ) {
 
     recordSettlement(
+
       settlement,
-      drawResult
+
+      drawResult,
+
+      drawRecord.issue
+
     );
 
   }
@@ -2123,7 +2049,7 @@ function executeDraw() {
 
   /*
   ================================
-  8. 顯示本局玩家結算
+  8. 顯示玩家本局結算
   ================================
   */
 
@@ -2135,9 +2061,6 @@ function executeDraw() {
   /*
   ================================
   9. 更新真正近 10 期
-
-  因為上面已經 recordDraw，
-  所以這裡馬上就能看到本期。
   ================================
   */
 
@@ -2244,15 +2167,12 @@ function startCountdown() {
     setInterval(
       () => {
 
-        countdown -= 1;
+        countdown -=
+          1;
 
 
         renderCountdown();
 
-
-        /*
-        最後幾秒播放倒數提示音
-        */
 
         if (
           countdown
@@ -2269,10 +2189,6 @@ function startCountdown() {
 
         }
 
-
-        /*
-        時間到
-        */
 
         if (
           countdown
@@ -2327,10 +2243,6 @@ function startRound() {
     null;
 
 
-  /*
-  新下注單
-  */
-
   currentBetSlip =
     createBetSlip(
       roomId
@@ -2345,16 +2257,8 @@ function startRound() {
     true;
 
 
-  /*
-  清理下注 UI
-  */
-
   renderBetSlip();
 
-
-  /*
-  清理上一局結算 UI
-  */
 
   const settlement =
     getElement(
@@ -2456,10 +2360,6 @@ function setupSoundToggle() {
   button.addEventListener(
     "click",
     () => {
-
-      /*
-      關閉聲音前播放一次 click。
-      */
 
       if (
         player.soundEnabled
@@ -2600,12 +2500,6 @@ function setupBackButton() {
       );
 
 
-      /*
-      如果還在下注期間，
-      玩家已下注但尚未開獎，
-      就把下注本金退回。
-      */
-
       if (
         bettingOpen
         &&
@@ -2655,13 +2549,6 @@ function setupPageLifecycle() {
       stopRoomBgm();
 
 
-      /*
-      尚未封盤的下注退回。
-
-      避免重新整理 / 關閉頁面
-      吃掉玩家下注本金。
-      */
-
       if (
         bettingOpen
         &&
@@ -2676,11 +2563,6 @@ function setupPageLifecycle() {
             .totalAmount
         );
 
-
-        /*
-        防止同一 lifecycle
-        重複退回。
-        */
 
         currentBetSlip.totalAmount =
           0;
@@ -2705,41 +2587,21 @@ function setupPageLifecycle() {
 
 function init() {
 
-  /*
-  房間資訊
-  */
-
   renderRoom();
 
 
-  /*
-  玩家餘額
-  */
-
   renderBalance();
 
-
-  /*
-  籌碼
-  */
 
   renderSelectedChip();
 
 
   /*
-  讀取真正的本倍場近 10 期
-
-  包含：
-  玩家有下注的期數
-  玩家沒下注的期數
+  顯示真正的本倍場近 10 期。
   */
 
   renderRecentRounds();
 
-
-  /*
-  互動
-  */
 
   setupChipButtons();
 
@@ -2755,10 +2617,6 @@ function init() {
 
   setupPageLifecycle();
 
-
-  /*
-  第一局
-  */
 
   startRound();
 
