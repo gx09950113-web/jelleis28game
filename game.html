@@ -15,7 +15,6 @@
     content="28 GAME LAB 遊戲房間"
   >
 
-
   <title>
     水母28
   </title>
@@ -573,10 +572,52 @@
 
 
       <!-- ======================================
-           右側：下注與結算資訊
+           右側：歷史 / 下注 / 結算
       ======================================= -->
 
       <aside class="game-sidebar">
+
+
+        <!-- ====================================
+             近 10 期
+        ===================================== -->
+
+        <section class="sidebar-panel recent-panel">
+
+
+          <div class="panel-title">
+
+            <h2>
+              近 10 期
+            </h2>
+
+            <span class="panel-description">
+              本倍場
+            </span>
+
+          </div>
+
+
+          <!--
+            之後 pages/game.js 會把
+            本房間最近 10 期開獎資料
+            動態塞進這裡。
+          -->
+
+          <div
+            id="recent-rounds"
+            class="recent-rounds"
+          >
+
+            <div class="empty-bets">
+              尚無開獎紀錄
+            </div>
+
+          </div>
+
+
+        </section>
+
 
         <!-- ====================================
              本局下注
@@ -633,38 +674,6 @@
         </section>
 
 
-        <!-- ====================================
-             近 10 期
-        ==================================== -->
-
-<section class="sidebar-panel recent-panel">
-
-  <div class="panel-title">
-
-    <h2>
-      近 10 期
-    </h2>
-
-    <span class="panel-description">
-      本倍場
-    </span>
-
-  </div>
-
-
-  <div
-    id="recent-rounds"
-    class="recent-rounds"
-  >
-
-    <div class="empty-bets">
-      尚無開獎紀錄
-    </div>
-
-  </div>
-
-</section>
-        
         <!-- ====================================
              本局結算
         ===================================== -->
@@ -755,8 +764,6 @@
 
   <!-- ========================================
        JavaScript
-
-       必須使用 type="module"
   ========================================= -->
 
   <script
