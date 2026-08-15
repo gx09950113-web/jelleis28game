@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">28 GAME LAB Settings Icon</title>
+  <desc id="desc">Gold settings gear with electric blue center, transparent background.</desc>
+
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF2A8"/>
+      <stop offset="28%" stop-color="#FFD86A"/>
+      <stop offset="62%" stop-color="#D99A22"/>
+      <stop offset="100%" stop-color="#8F5A10"/>
+    </linearGradient>
+
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7DE2FF"/>
+      <stop offset="52%" stop-color="#2184FF"/>
+      <stop offset="100%" stop-color="#0B3EAA"/>
+    </linearGradient>
+
+    <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="1.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- blue glow -->
+  <circle
+    cx="32" cy="32" r="19"
+    fill="none"
+    stroke="url(#blue)"
+    stroke-width="6"
+    opacity=".3"
+    filter="url(#softGlow)"
+  />
+
+  <!-- gear -->
+  <path
+    d="M27.2 8.5h9.6l1.7 7a18.5 18.5 0 0 1 4.2 1.8l6.2-3.8 6.8 6.8-3.8 6.2a18.5 18.5 0 0 1 1.8 4.2l7 1.7v9.6l-7 1.7a18.5 18.5 0 0 1-1.8 4.2l3.8 6.2-6.8 6.8-6.2-3.8a18.5 18.5 0 0 1-4.2 1.8l-1.7 7h-9.6l-1.7-7a18.5 18.5 0 0 1-4.2-1.8l-6.2 3.8-6.8-6.8 3.8-6.2a18.5 18.5 0 0 1-1.8-4.2l-7-1.7v-9.6l7-1.7a18.5 18.5 0 0 1 1.8-4.2l-3.8-6.2 6.8-6.8 6.2 3.8a18.5 18.5 0 0 1 4.2-1.8Z"
+    transform="translate(0 -5)"
+    fill="#071A3A"
+    stroke="url(#gold)"
+    stroke-width="3.4"
+    stroke-linejoin="round"
+  />
+
+  <!-- center -->
+  <circle
+    cx="32" cy="32" r="10"
+    fill="#071A3A"
+    stroke="url(#blue)"
+    stroke-width="4"
+    filter="url(#softGlow)"
+  />
+
+  <circle cx="32" cy="32" r="3.2" fill="url(#gold)"/>
+</svg>

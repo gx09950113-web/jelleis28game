@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">28 GAME LAB Coin Icon</title>
+  <desc id="desc">Gold casino coin with crown emblem and electric blue accent, transparent background.</desc>
+
+  <defs>
+    <radialGradient id="goldFace" cx="36%" cy="28%" r="78%">
+      <stop offset="0%" stop-color="#FFF7BE"/>
+      <stop offset="30%" stop-color="#FFD968"/>
+      <stop offset="67%" stop-color="#D99A22"/>
+      <stop offset="100%" stop-color="#87500C"/>
+    </radialGradient>
+
+    <linearGradient id="goldEdge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF1A0"/>
+      <stop offset="35%" stop-color="#EFB63A"/>
+      <stop offset="70%" stop-color="#B77412"/>
+      <stop offset="100%" stop-color="#754108"/>
+    </linearGradient>
+
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7DE2FF"/>
+      <stop offset="52%" stop-color="#2184FF"/>
+      <stop offset="100%" stop-color="#0B3EAA"/>
+    </linearGradient>
+
+    <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="1.15" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- outer coin -->
+  <circle cx="32" cy="32" r="25" fill="url(#goldFace)" stroke="url(#goldEdge)" stroke-width="4"/>
+
+  <!-- electric-blue accent ring -->
+  <circle
+    cx="32" cy="32" r="19.5"
+    fill="none"
+    stroke="url(#blue)"
+    stroke-width="2.5"
+    opacity=".9"
+    filter="url(#softGlow)"
+  />
+
+  <!-- inner medallion -->
+  <circle cx="32" cy="32" r="16" fill="#071A3A" stroke="url(#goldEdge)" stroke-width="2.5"/>
+
+  <!-- crown emblem -->
+  <path
+    d="M21.5 28.5 25 34l7-9 7 9 3.5-5.5-2 12h-17l-2-12Z"
+    fill="url(#goldFace)"
+    stroke="#FFD968"
+    stroke-width="1.2"
+    stroke-linejoin="round"
+  />
+
+  <path
+    d="M24.5 43h15"
+    fill="none"
+    stroke="url(#goldFace)"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
+
+  <!-- crown jewel -->
+  <circle cx="32" cy="25" r="1.8" fill="url(#blue)"/>
+
+  <!-- subtle edge marks -->
+  <path d="M32 7v4M32 53v4M7 32h4M53 32h4"
+        stroke="#FFF0A0" stroke-width="2.2" stroke-linecap="round" opacity=".85"/>
+</svg>

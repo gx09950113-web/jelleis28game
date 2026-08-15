@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">28 GAME LAB Info Icon</title>
+  <desc id="desc">Gold information badge with electric blue accent, transparent background.</desc>
+
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF2A8"/>
+      <stop offset="28%" stop-color="#FFD86A"/>
+      <stop offset="62%" stop-color="#D99A22"/>
+      <stop offset="100%" stop-color="#8F5A10"/>
+    </linearGradient>
+
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7DE2FF"/>
+      <stop offset="52%" stop-color="#2184FF"/>
+      <stop offset="100%" stop-color="#0B3EAA"/>
+    </linearGradient>
+
+    <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="1.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- blue outer glow -->
+  <circle
+    cx="32" cy="32" r="23"
+    fill="none"
+    stroke="url(#blue)"
+    stroke-width="6"
+    opacity=".34"
+    filter="url(#softGlow)"
+  />
+
+  <!-- main badge -->
+  <circle
+    cx="32" cy="32" r="23"
+    fill="#071A3A"
+    stroke="url(#gold)"
+    stroke-width="4.5"
+  />
+
+  <!-- inner accent ring -->
+  <circle
+    cx="32" cy="32" r="17.5"
+    fill="none"
+    stroke="url(#blue)"
+    stroke-width="2"
+    opacity=".72"
+  />
+
+  <!-- information dot -->
+  <circle cx="32" cy="22.5" r="3" fill="url(#gold)"/>
+
+  <!-- information stem -->
+  <path
+    d="M32 31v14"
+    fill="none"
+    stroke="url(#gold)"
+    stroke-width="5"
+    stroke-linecap="round"
+  />
+
+  <!-- blue jewel accent -->
+  <circle cx="32" cy="31" r="1.7" fill="url(#blue)" filter="url(#softGlow)"/>
+</svg>

@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">28 GAME LAB Rules Icon</title>
+  <desc id="desc">Gold open rule book with electric blue information mark, transparent background.</desc>
+
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF2A8"/>
+      <stop offset="28%" stop-color="#FFD86A"/>
+      <stop offset="62%" stop-color="#D99A22"/>
+      <stop offset="100%" stop-color="#8F5A10"/>
+    </linearGradient>
+
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7DE2FF"/>
+      <stop offset="52%" stop-color="#2184FF"/>
+      <stop offset="100%" stop-color="#0B3EAA"/>
+    </linearGradient>
+
+    <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="1.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- subtle blue glow -->
+  <path
+    d="M7.5 15.5c9-2.5 17-.5 24.5 5.5 7.5-6 15.5-8 24.5-5.5V49c-9-2.5-17-.5-24.5 5.5C24.5 48.5 16.5 46.5 7.5 49Z"
+    fill="none"
+    stroke="url(#blue)"
+    stroke-width="6"
+    opacity=".3"
+    filter="url(#softGlow)"
+  />
+
+  <!-- open book -->
+  <path
+    d="M7.5 15.5c9-2.5 17-.5 24.5 5.5v33.5C24.5 48.5 16.5 46.5 7.5 49Z"
+    fill="#071A3A"
+    stroke="url(#gold)"
+    stroke-width="4"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M56.5 15.5c-9-2.5-17-.5-24.5 5.5v33.5c7.5-6 15.5-8 24.5-5.5Z"
+    fill="#071A3A"
+    stroke="url(#gold)"
+    stroke-width="4"
+    stroke-linejoin="round"
+  />
+
+  <!-- center spine -->
+  <path
+    d="M32 21v33.5"
+    fill="none"
+    stroke="url(#gold)"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
+
+  <!-- rule lines -->
+  <path
+    d="M13.5 25h11M13.5 32h11M39.5 25h11M39.5 32h7"
+    fill="none"
+    stroke="url(#gold)"
+    stroke-width="2.8"
+    stroke-linecap="round"
+    opacity=".9"
+  />
+
+  <!-- information mark -->
+  <circle
+    cx="44.5" cy="41.5" r="7"
+    fill="#071A3A"
+    stroke="url(#blue)"
+    stroke-width="2.8"
+    filter="url(#softGlow)"
+  />
+  <circle cx="44.5" cy="38.2" r="1.4" fill="#FFD86A"/>
+  <path
+    d="M44.5 42v4"
+    stroke="#FFD86A"
+    stroke-width="2.5"
+    stroke-linecap="round"
+  />
+</svg>

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">28 GAME LAB Home Icon</title>
+  <desc id="desc">Gold home icon with electric blue accent, transparent background.</desc>
+
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF2A8"/>
+      <stop offset="28%" stop-color="#FFD86A"/>
+      <stop offset="62%" stop-color="#D99A22"/>
+      <stop offset="100%" stop-color="#8F5A10"/>
+    </linearGradient>
+
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#73D7FF"/>
+      <stop offset="55%" stop-color="#1B7DFF"/>
+      <stop offset="100%" stop-color="#0B3EAA"/>
+    </linearGradient>
+
+    <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="1.4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- subtle blue inner accent -->
+  <path
+    d="M14 31.5 32 16l18 15.5"
+    fill="none"
+    stroke="url(#blue)"
+    stroke-width="6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.55"
+    filter="url(#softGlow)"
+  />
+
+  <!-- gold roof -->
+  <path
+    d="M10.5 32.5 32 14l21.5 18.5"
+    fill="none"
+    stroke="url(#gold)"
+    stroke-width="5.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- house body -->
+  <path
+    d="M17.5 30.5V50c0 1.7 1.3 3 3 3h23c1.7 0 3-1.3 3-3V30.5"
+    fill="none"
+    stroke="url(#gold)"
+    stroke-width="5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- doorway -->
+  <path
+    d="M27 53V40.5c0-1.4 1.1-2.5 2.5-2.5h5c1.4 0 2.5 1.1 2.5 2.5V53"
+    fill="none"
+    stroke="url(#blue)"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- tiny jewel accent -->
+  <circle cx="32" cy="24.5" r="2.2" fill="url(#blue)"/>
+</svg>
