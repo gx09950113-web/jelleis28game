@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="28 GAME LAB 遊戲紀錄與每日統計"
+  >
+
+  <title>
+    遊戲紀錄 | 28 GAME LAB
+  </title>
+
+
+  <!-- Favicon -->
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="./assets/images/favicon.png"
+  >
+
+
+  <!-- 共用樣式 -->
+
+  <link
+    rel="stylesheet"
+    href="./css/common.css"
+  >
+
+
+  <!-- 歷史紀錄頁樣式 -->
+
+  <link
+    rel="stylesheet"
+    href="./css/history.css"
+  >
+
+</head>
+
+
+<body>
+
+  <main class="history-app">
+
+
+    <!-- ========================================
+         Header
+    ========================================= -->
+
+    <header class="history-header">
+
+
+      <!-- 返回大廳 -->
+
+      <button
+        id="back-button"
+        class="icon-button"
+        type="button"
+        aria-label="返回大廳"
+      >
+
+        <img
+          src="./assets/icons/back.svg"
+          alt=""
+        >
+
+        <span>
+          返回大廳
+        </span>
+
+      </button>
+
+
+      <!-- 頁面標題 -->
+
+      <div class="history-title">
+
+        <img
+          src="./assets/icons/history.svg"
+          alt=""
+        >
+
+        <div>
+
+          <h1>
+            遊戲紀錄
+          </h1>
+
+          <p>
+            GAME HISTORY
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- 聲音 -->
+
+      <button
+        id="sound-toggle"
+        class="icon-button sound-button"
+        type="button"
+        aria-label="關閉聲音"
+      >
+
+        <img
+          src="./assets/icons/sound-on.svg"
+          alt="關閉聲音"
+        >
+
+      </button>
+
+    </header>
+
+
+    <!-- ========================================
+         Hero
+    ========================================= -->
+
+    <section class="history-hero">
+
+      <div>
+
+        <span class="hero-label">
+          PLAYER STATISTICS
+        </span>
+
+        <h2>
+          今日遊戲統計
+        </h2>
+
+        <p>
+          查看今日下注、返還、盈虧與各倍場遊戲紀錄。
+        </p>
+
+      </div>
+
+
+      <div class="hero-date">
+
+        <span>
+          統計日期
+        </span>
+
+        <strong
+          id="today-date"
+        >
+          -
+        </strong>
+
+      </div>
+
+    </section>
+
+
+    <!-- ========================================
+         今日總覽
+    ========================================= -->
+
+    <section class="history-section">
+
+      <div class="section-heading">
+
+        <div>
+
+          <h2>
+            今日總覽
+          </h2>
+
+          <p>
+            所有倍場的今日遊戲結果。
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="summary-grid">
+
+
+        <!-- 有效下注 -->
+
+        <article class="summary-card">
+
+          <span class="summary-label">
+            今日總下注
+          </span>
+
+          <strong
+            id="today-valid-bet"
+            class="summary-value"
+          >
+            0
+          </strong>
+
+        </article>
+
+
+        <!-- 總返還 -->
+
+        <article class="summary-card">
+
+          <span class="summary-label">
+            今日總返還
+          </span>
+
+          <strong
+            id="today-payout"
+            class="summary-value"
+          >
+            0
+          </strong>
+
+        </article>
+
+
+        <!-- 淨盈虧 -->
+
+        <article class="summary-card important">
+
+          <span class="summary-label">
+            今日淨盈虧
+          </span>
+
+          <strong
+            id="today-net-profit"
+            class="summary-value"
+          >
+            0
+          </strong>
+
+        </article>
+
+
+        <!-- 局數 -->
+
+        <article class="summary-card">
+
+          <span class="summary-label">
+            今日局數
+          </span>
+
+          <strong
+            id="today-rounds"
+            class="summary-value"
+          >
+            0
+          </strong>
+
+        </article>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- ========================================
+         WIN / LOSE / REFUND
+    ========================================= -->
+
+    <section class="history-section">
+
+      <div class="section-heading">
+
+        <div>
+
+          <h2>
+            結算統計
+          </h2>
+
+          <p>
+            今日所有下注筆數的結算結果。
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="result-grid">
+
+
+        <!-- WIN -->
+
+        <article class="result-card win-card">
+
+          <span>
+            WIN
+          </span>
+
+          <strong
+            id="today-win-count"
+          >
+            0
+          </strong>
+
+          <p>
+            中獎筆數
+          </p>
+
+        </article>
+
+
+        <!-- LOSE -->
+
+        <article class="result-card lose-card">
+
+          <span>
+            LOSE
+          </span>
+
+          <strong
+            id="today-lose-count"
+          >
+            0
+          </strong>
+
+          <p>
+            未中筆數
+          </p>
+
+        </article>
+
+
+        <!-- REFUND -->
+
+        <article class="result-card refund-card">
+
+          <span>
+            REFUND
+          </span>
+
+          <strong
+            id="today-refund-count"
+          >
+            0
+          </strong>
+
+          <p>
+            回本筆數
+          </p>
+
+        </article>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- ========================================
+         各倍場統計
+    ========================================= -->
+
+    <section class="history-section">
+
+      <div class="section-heading">
+
+        <div>
+
+          <h2>
+            各倍場統計
+          </h2>
+
+          <p>
+            今日四個遊戲房間的個別數據。
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="room-stats-grid">
+
+
+        <!-- ====================================
+             1.8
+        ===================================== -->
+
+        <article
+          class="room-stat-card"
+          data-history-room="1.8"
+        >
+
+          <div class="room-stat-header">
+
+            <strong>
+              1.8×
+            </strong>
+
+            <span>
+              1.8 倍場
+            </span>
+
+          </div>
+
+
+          <div class="room-stat-content">
+
+            <div class="stat-row">
+
+              <span>
+                有效下注
+              </span>
+
+              <strong
+                id="room-18-valid-bet"
+              >
+                0
+              </strong>
+
+            </div>
+
+
+            <div class="stat-row">
+
+              <span>
+                返還
+              </span>
+
+              <strong
+                id="room-18-payout"
+              >
+                0
+              </strong>
+
+            </div>
+
+
+            <div class="stat-row">
+
+              <span>
+                淨盈虧
+              </span>
+
+              <strong
+                id="room-18-net-profit"
+              >
+                0
+              </strong>
+
+            </div>
+
+
+            <div class="stat-row">
+
+              <span>
+                局數
+              </span>
+
+              <strong
+                id="room-18-rounds"
+              >
+                0
+              </strong>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- ====================================
+             2.0
+        ===================================== -->
+
+        <article
+          class="room-stat-card"
+          data-history-room="2.0"
+        >
+
+          <div class="room-stat-header">
+
+            <strong>
+              2.0×
+            </strong>
+
+            <span>
+              2.0 倍場
+            </span>
+
+          </div>
+
+
+          <div class="room-stat-content">
+
+            <div class="stat-row">
+
+              <span>
+                有效下注
+              </span>
+
+              <strong
+                id="room-20-valid-bet"
+              >
+                0
+              </strong>
+
+            </div>
+
+
+            <div class="stat-row">
+
+              <span>
+                返還
+              </span>
+
+              <strong
+                id="room-20-payout"
+              >
+                0
+              </strong>
+
+            </div>
+
+
+            <div class="stat-row">
+
+              <span>
+                淨盈虧
+              </span>
+
+              <strong
+                id="room-20-net-profit"
+              >
+                0
+              </strong>
+
+            </div>
+
+
+            <div class="stat-row">
+
+              <span>
+                局數
+              </span>
+
+              <strong
+                id="room-20-rounds"
+              >
+                0
+              </strong>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- ====================================
+             2.8
+        ===================================== -->
+
+        <article
+          class="room-stat-card"
+          data-history-room="2.8"
+        >
+
+          <div class="room-stat-header">
+
+            <strong>
+              2.8×
+            </strong>
+
+            <span>
+              2.8 倍場
+            </span>
+
+          </div>
+
+
+          <div class="room-stat-content">
+
+            <div class="stat-row">
+
+              <span>
+                有效下注
+              </span>
+
+              <strong
+                id="room-28-valid-bet"
+              >
+                0
+              </strong>
+
+            </div>
+
+
+            <div class="stat-row">
+
+              <span>
+                返還
+              </span>
+
+              <strong
+                id="room-28-payout"
+              >
+                0
+              </strong>
+
+            </div>
+
+
+            <div class="stat-row">
+
+              <span>
+                淨盈虧
+              </span>
+
+              <strong
+                id="room-28-net-profit"
+              >
+                0
+              </strong>
+
+            </div>
+
+
+            <div class="stat-row">
+
+              <span>
+                局數
+              </span>
+
+              <strong
+                id="room-28-rounds"
+              >
+                0
+              </strong>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- ====================================
+             3.2
+        ===================================== -->
+
+        <article
+          class="room-stat-card"
+          data-history-room="3.2"
+        >
+
+          <div class="room-stat-header">
+
+            <strong>
+              3.2×
+            </strong>
+
+            <span>
+              3.2 倍場
+            </span>
+
+          </div>
+
+
+          <div class="room-stat-content">
+
+            <div class="stat-row">
+
+              <span>
+                有效下注
+              </span>
+
+              <strong
+                id="room-32-valid-bet"
+              >
+                0
+              </strong>
+
+            </div>
+
+
+            <div class="stat-row">
+
+              <span>
+                返還
+              </span>
+
+              <strong
+                id="room-32-payout"
+              >
+                0
+              </strong>
+
+            </div>
+
+
+            <div class="stat-row">
+
+              <span>
+                淨盈虧
+              </span>
+
+              <strong
+                id="room-32-net-profit"
+              >
+                0
+              </strong>
+
+            </div>
+
+
+            <div class="stat-row">
+
+              <span>
+                局數
+              </span>
+
+              <strong
+                id="room-32-rounds"
+              >
+                0
+              </strong>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- ========================================
+         今日反水統計
+    ========================================= -->
+
+    <section class="history-section rebate-section">
+
+      <div class="section-heading">
+
+        <div>
+
+          <h2>
+            今日反水統計
+          </h2>
+
+          <p>
+            僅計算 2.0、2.8、3.2 倍場。
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="rebate-summary">
+
+
+        <div class="rebate-stat">
+
+          <span>
+            反水有效下注
+          </span>
+
+          <strong
+            id="rebate-valid-bet"
+          >
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="rebate-stat">
+
+          <span>
+            反水淨盈虧
+          </span>
+
+          <strong
+            id="rebate-net-profit"
+          >
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="rebate-stat">
+
+          <span>
+            反水計算局數
+          </span>
+
+          <strong
+            id="rebate-rounds"
+          >
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="rebate-stat">
+
+          <span>
+            今日狀態
+          </span>
+
+          <strong
+            id="rebate-status"
+          >
+            尚未達標
+          </strong>
+
+        </div>
+
+
+      </div>
+
+
+      <div
+        id="rebate-preview"
+        class="rebate-preview"
+      >
+
+        今日遊戲結束後，將依最終有效下注與淨盈虧計算隔日反水。
+
+      </div>
+
+    </section>
+
+
+    <!-- ========================================
+         最近七天
+    ========================================= -->
+
+    <section class="history-section">
+
+      <div class="section-heading">
+
+        <div>
+
+          <h2>
+            最近 7 天
+          </h2>
+
+          <p>
+            顯示最近有遊戲紀錄的每日統計。
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="history-table-wrapper">
+
+        <table class="history-table">
+
+          <thead>
+
+            <tr>
+
+              <th>
+                日期
+              </th>
+
+              <th>
+                有效下注
+              </th>
+
+              <th>
+                返還
+              </th>
+
+              <th>
+                淨盈虧
+              </th>
+
+              <th>
+                局數
+              </th>
+
+              <th>
+                反水
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody
+            id="history-table-body"
+          >
+
+            <tr>
+
+              <td
+                colspan="6"
+                class="empty-history"
+              >
+                尚無遊戲紀錄
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <!-- ========================================
+         說明
+    ========================================= -->
+
+    <section class="history-note">
+
+      <img
+        src="./assets/icons/info.svg"
+        alt=""
+      >
+
+      <p>
+        每日登入獎勵、七日登入獎勵與反水獎勵不計入遊戲淨盈虧。
+        特殊回本局會計入有效下注，但該局淨盈虧為 0。
+      </p>
+
+    </section>
+
+
+  </main>
+
+
+  <!-- ========================================
+       JavaScript
+  ========================================= -->
+
+  <script
+    type="module"
+    src="./js/pages/history.js"
+  ></script>
+
+</body>
+
+</html>
