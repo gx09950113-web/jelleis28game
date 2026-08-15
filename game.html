@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="28 GAME LAB 遊戲房間"
+  >
+
+
+  <title>
+    28 GAME LAB
+  </title>
+
+
+  <!-- Favicon -->
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="./assets/images/favicon.png"
+  >
+
+
+  <!-- 共用 CSS -->
+
+  <link
+    rel="stylesheet"
+    href="./css/common.css"
+  >
+
+
+  <!-- 遊戲頁 CSS -->
+
+  <link
+    rel="stylesheet"
+    href="./css/game.css"
+  >
+
+</head>
+
+
+<body>
+
+  <!-- ========================================
+       整個遊戲頁
+  ========================================= -->
+
+  <main class="game-app">
+
+
+    <!-- ========================================
+         頂部導覽列
+    ========================================= -->
+
+    <header class="game-header">
+
+
+      <!-- 返回首頁 -->
+
+      <div class="header-left">
+
+        <button
+          id="back-button"
+          class="icon-button back-button"
+          type="button"
+          aria-label="返回大廳"
+        >
+
+          <img
+            src="./assets/icons/back.svg"
+            alt=""
+          >
+
+          <span>
+            返回大廳
+          </span>
+
+        </button>
+
+      </div>
+
+
+      <!-- 房間名稱 -->
+
+      <div class="header-center">
+
+        <div class="room-title">
+
+          <span
+            id="room-name"
+            class="room-name"
+          >
+            載入中...
+          </span>
+
+          <span
+            id="room-multiplier"
+            class="room-multiplier"
+          >
+            -
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- 餘額 / 聲音 -->
+
+      <div class="header-right">
+
+
+        <!-- 玩家餘額 -->
+
+        <div class="wallet-display">
+
+          <img
+            src="./assets/icons/coin.svg"
+            alt=""
+            class="wallet-icon"
+          >
+
+          <div class="wallet-info">
+
+            <span class="wallet-label">
+              我的代幣
+            </span>
+
+            <strong
+              id="balance"
+              class="wallet-balance"
+            >
+              0
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- 聲音開關 -->
+
+        <button
+          id="sound-toggle"
+          class="icon-button sound-button"
+          type="button"
+          aria-label="關閉聲音"
+        >
+
+          <img
+            src="./assets/icons/sound-on.svg"
+            alt="關閉聲音"
+          >
+
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- ========================================
+         遊戲主要區域
+    ========================================= -->
+
+    <section class="game-layout">
+
+
+      <!-- ======================================
+           左 / 中：遊戲主區域
+      ======================================= -->
+
+      <section class="game-main">
+
+
+        <!-- ====================================
+             遊戲狀態
+        ===================================== -->
+
+        <section class="game-status-panel">
+
+          <div
+            id="game-status"
+            class="game-status"
+          >
+            準備中
+          </div>
+
+
+          <div class="countdown-area">
+
+            <span class="countdown-label">
+              本局倒數
+            </span>
+
+            <strong
+              id="countdown"
+              class="countdown"
+            >
+              15
+            </strong>
+
+            <span class="countdown-unit">
+              秒
+            </span>
+
+          </div>
+
+        </section>
+
+
+        <!-- ====================================
+             開獎區
+        ===================================== -->
+
+        <section class="draw-panel">
+
+
+          <div class="panel-title">
+
+            <h2>
+              開獎結果
+            </h2>
+
+          </div>
+
+
+          <!-- 三個開獎號碼 -->
+
+          <div class="draw-numbers">
+
+
+            <div
+              id="number-1"
+              class="number-ball"
+            >
+              ?
+            </div>
+
+
+            <span class="number-plus">
+              +
+            </span>
+
+
+            <div
+              id="number-2"
+              class="number-ball"
+            >
+              ?
+            </div>
+
+
+            <span class="number-plus">
+              +
+            </span>
+
+
+            <div
+              id="number-3"
+              class="number-ball"
+            >
+              ?
+            </div>
+
+
+          </div>
+
+
+          <!-- 和值 -->
+
+          <div class="sum-area">
+
+            <span>
+              和值
+            </span>
+
+            <strong
+              id="draw-sum"
+              class="draw-sum"
+            >
+              ?
+            </strong>
+
+          </div>
+
+
+          <!-- 大小單雙 / 特殊結果 -->
+
+          <div
+            id="draw-result"
+            class="draw-result"
+          >
+            等待開獎
+          </div>
+
+
+        </section>
+
+
+        <!-- ====================================
+             下注區
+        ===================================== -->
+
+        <section class="betting-panel">
+
+
+          <div class="panel-title">
+
+            <h2>
+              下注區
+            </h2>
+
+            <span class="panel-description">
+              選擇下注項目
+            </span>
+
+          </div>
+
+
+          <!-- 基本大小单双 -->
+
+          <div class="bet-section">
+
+            <div class="bet-section-title">
+              基本玩法
+            </div>
+
+
+            <div class="bet-grid basic-bets">
+
+
+              <button
+                class="bet-button"
+                type="button"
+                data-bet-type="big"
+              >
+
+                <strong>
+                  大
+                </strong>
+
+                <span>
+                  BIG
+                </span>
+
+              </button>
+
+
+              <button
+                class="bet-button"
+                type="button"
+                data-bet-type="small"
+              >
+
+                <strong>
+                  小
+                </strong>
+
+                <span>
+                  SMALL
+                </span>
+
+              </button>
+
+
+              <button
+                class="bet-button"
+                type="button"
+                data-bet-type="odd"
+              >
+
+                <strong>
+                  單
+                </strong>
+
+                <span>
+                  ODD
+                </span>
+
+              </button>
+
+
+              <button
+                class="bet-button"
+                type="button"
+                data-bet-type="even"
+              >
+
+                <strong>
+                  雙
+                </strong>
+
+                <span>
+                  EVEN
+                </span>
+
+              </button>
+
+
+            </div>
+
+          </div>
+
+
+          <!-- 四組合 -->
+
+          <div class="bet-section">
+
+            <div class="bet-section-title">
+              組合玩法
+            </div>
+
+
+            <div class="bet-grid combo-bets">
+
+
+              <button
+                class="bet-button combo"
+                type="button"
+                data-bet-type="big-odd"
+              >
+
+                <strong>
+                  大單
+                </strong>
+
+                <span>
+                  BIG ODD
+                </span>
+
+              </button>
+
+
+              <button
+                class="bet-button combo"
+                type="button"
+                data-bet-type="big-even"
+              >
+
+                <strong>
+                  大雙
+                </strong>
+
+                <span>
+                  BIG EVEN
+                </span>
+
+              </button>
+
+
+              <button
+                class="bet-button combo"
+                type="button"
+                data-bet-type="small-odd"
+              >
+
+                <strong>
+                  小單
+                </strong>
+
+                <span>
+                  SMALL ODD
+                </span>
+
+              </button>
+
+
+              <button
+                class="bet-button combo"
+                type="button"
+                data-bet-type="small-even"
+              >
+
+                <strong>
+                  小雙
+                </strong>
+
+                <span>
+                  SMALL EVEN
+                </span>
+
+              </button>
+
+
+            </div>
+
+          </div>
+
+
+        </section>
+
+
+        <!-- ====================================
+             籌碼選擇
+        ===================================== -->
+
+        <section class="chip-panel">
+
+
+          <div class="panel-title">
+
+            <h2>
+              選擇籌碼
+            </h2>
+
+          </div>
+
+
+          <div class="chip-list">
+
+
+            <button
+              type="button"
+              class="chip-button"
+              data-chip="10"
+            >
+              10
+            </button>
+
+
+            <button
+              type="button"
+              class="chip-button"
+              data-chip="50"
+            >
+              50
+            </button>
+
+
+            <button
+              type="button"
+              class="chip-button selected"
+              data-chip="100"
+            >
+              100
+            </button>
+
+
+            <button
+              type="button"
+              class="chip-button"
+              data-chip="500"
+            >
+              500
+            </button>
+
+
+            <button
+              type="button"
+              class="chip-button"
+              data-chip="1000"
+            >
+              1,000
+            </button>
+
+
+          </div>
+
+        </section>
+
+
+      </section>
+
+
+      <!-- ======================================
+           右側：下注與結算資訊
+      ======================================= -->
+
+      <aside class="game-sidebar">
+
+
+        <!-- ====================================
+             本局下注
+        ===================================== -->
+
+        <section class="sidebar-panel current-bet-panel">
+
+
+          <div class="panel-title">
+
+            <h2>
+              我的下注
+            </h2>
+
+          </div>
+
+
+          <div
+            id="current-bets"
+            class="current-bets"
+          >
+
+            <div class="empty-bets">
+              尚未下注
+            </div>
+
+          </div>
+
+
+          <div class="bet-total-row">
+
+            <span>
+              本局下注
+            </span>
+
+            <strong
+              id="total-bet"
+            >
+              0
+            </strong>
+
+          </div>
+
+
+          <button
+            id="clear-bets"
+            class="clear-bets-button"
+            type="button"
+          >
+            清空下注
+          </button>
+
+
+        </section>
+
+
+        <!-- ====================================
+             本局結算
+        ===================================== -->
+
+        <section class="sidebar-panel settlement-panel">
+
+
+          <div class="panel-title">
+
+            <h2>
+              本局結算
+            </h2>
+
+          </div>
+
+
+          <div
+            id="settlement-result"
+            class="settlement-result"
+          >
+
+            <div class="settlement-empty">
+              等待本局結算
+            </div>
+
+          </div>
+
+
+        </section>
+
+
+        <!-- ====================================
+             房間簡易提示
+        ===================================== -->
+
+        <section class="sidebar-panel room-notice">
+
+          <div class="info-row">
+
+            <img
+              src="./assets/icons/info.svg"
+              alt=""
+            >
+
+            <p>
+              實際結算依目前倍場規則為準。
+            </p>
+
+          </div>
+
+        </section>
+
+
+      </aside>
+
+
+    </section>
+
+
+  </main>
+
+
+  <!-- ========================================
+       Toast
+  ========================================= -->
+
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+  >
+
+    <div
+      id="toast-title"
+      class="toast-title"
+    >
+    </div>
+
+    <div
+      id="toast-message"
+      class="toast-message"
+    >
+    </div>
+
+  </div>
+
+
+  <!-- ========================================
+       JavaScript
+
+       必須使用 type="module"
+  ========================================= -->
+
+  <script
+    type="module"
+    src="./js/pages/game.js"
+  ></script>
+
+
+</body>
+
+</html>
