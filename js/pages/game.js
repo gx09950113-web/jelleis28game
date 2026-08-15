@@ -13,13 +13,25 @@ pages/game.js
 - 扣除下注代幣
 - 倒數
 - 開獎
-- 結算
-- 發放返還代幣
-- 記錄每日統計
+- 保存所有開獎歷史
 - 顯示本倍場近 10 期
+- 結算玩家下注
+- 發放返還代幣
+- 記錄玩家每日統計
+- 記錄玩家單局詳細紀錄
 - 房間 BGM
 - 遊戲音效
 - 返回大廳
+
+資料分工：
+
+draw-history.js
+→ 不論玩家是否下注
+  都記錄每一期開獎
+
+statistics.js
+→ 只有玩家有下注時
+  才記錄玩家統計與結算
 
 不負責：
 - 定義遊戲規則
@@ -81,10 +93,22 @@ from "../game/settlement.js";
 
 
 import {
-  recordSettlement,
-  getRecentRounds
+  recordSettlement
 }
 from "../game/statistics.js";
+
+
+/*
+========================================
+真正的開獎歷史
+========================================
+*/
+
+import {
+  recordDraw,
+  getRecentDraws
+}
+from "../game/draw-history.js";
 
 
 import {
@@ -1439,18 +1463,16 @@ function renderDrawResult(
 
 /*
 ========================================
-近 10 期
+真正的近 10 期
 ========================================
 
-目前顯示：
-- 期號
-- 三個開獎號碼
-- 和值
-- 大 / 小
-- 單 / 雙
-- 0 / 對 / 豹等特殊標記
+資料來源：
+draw-history.js
 
-只顯示目前所在倍場。
+與玩家是否下注無關。
+
+只要該房間真的開過獎，
+就會出現在這裡。
 ========================================
 */
 
@@ -1469,10 +1491,10 @@ function renderRecentRounds() {
   }
 
 
-  const rounds =
-    getRecentRounds(
-      10,
-      roomId
+  const draws =
+    getRecentDraws(
+      roomId,
+      10
     );
 
 
@@ -1481,7 +1503,7 @@ function renderRecentRounds() {
 
 
   if (
-    rounds.length
+    draws.length
     ===
     0
   ) {
@@ -1500,30 +1522,23 @@ function renderRecentRounds() {
 
 
   for (
-    const round
-    of rounds
+    const draw
+    of draws
   ) {
 
-    /*
-    防止舊資料沒有 draw
-    導致整個畫面掛掉。
-    */
-
     if (
-      !round.draw
-      ||
       !Array.isArray(
-        round.draw.numbers
+        draw.numbers
       )
+      ||
+      draw.numbers.length
+      !==
+      3
     ) {
 
       continue;
 
     }
-
-
-    const draw =
-      round.draw;
 
 
     const item =
@@ -1594,10 +1609,10 @@ function renderRecentRounds() {
 
 
     /*
-    13 / 14 也標出來。
+    13 / 14 也顯示。
 
-    即使不是所有房間都會因此回本，
-    它仍然屬於開獎結果資訊。
+    這只是描述開獎結果，
+    不代表所有倍場都會回本。
     */
 
     if (
@@ -1648,7 +1663,7 @@ function renderRecentRounds() {
 
           <span class="recent-round-issue">
             ${
-              round.issue
+              draw.issue
               ??
               "-"
             }
@@ -1691,12 +1706,6 @@ function renderRecentRounds() {
 
   }
 
-
-  /*
-  如果資料存在，
-  但全部都是舊版無 draw 的資料，
-  還是顯示空狀態。
-  */
 
   if (
     container.children.length
@@ -1827,6 +1836,22 @@ function renderSettlement(
 function playSettlementSound(
   settlement
 ) {
+
+  /*
+  玩家沒有下注，
+  不播放輸贏音效。
+  */
+
+  if (
+    settlement.totalBet
+    <=
+    0
+  ) {
+
+    return;
+
+  }
+
 
   /*
   全部都是 REFUND
@@ -1994,7 +2019,46 @@ function executeDraw() {
 
   /*
   ================================
-  3. 顯示開獎
+  3. 無條件保存真正的開獎歷史
+
+  這一步與玩家有沒有下注無關。
+
+  只要這一期有開獎，
+  就寫入 draw-history.js。
+  ================================
+  */
+
+  const drawRecord =
+    recordDraw(
+      roomId,
+      drawResult
+    );
+
+
+  /*
+  drawRecord 目前包含：
+
+  {
+    issue,
+    sequence,
+    roomId,
+    numbers,
+    sum,
+    ...
+  }
+
+  後面如果要讓玩家結算
+  與真正開獎期號互相關聯，
+  可以再把 drawRecord.issue
+  傳進 statistics.js。
+  */
+
+  void drawRecord;
+
+
+  /*
+  ================================
+  4. 顯示開獎
   ================================
   */
 
@@ -2005,7 +2069,10 @@ function executeDraw() {
 
   /*
   ================================
-  4. 結算下注
+  5. 結算玩家下注
+
+  即使玩家沒下注，
+  settlement 仍然可以正常產生。
   ================================
   */
 
@@ -2018,7 +2085,7 @@ function executeDraw() {
 
   /*
   ================================
-  5. 發放返還
+  6. 發放玩家返還
   ================================
   */
 
@@ -2029,14 +2096,14 @@ function executeDraw() {
 
   /*
   ================================
-  6. 寫入每日統計 + 單局歷史
+  7. 玩家有下注時，
+  才寫入玩家統計。
 
-  目前只記錄玩家有下注的局。
+  draw-history.js：
+  所有期數
 
-  下一階段如果要把
-  「真正每一期開獎」
-  與玩家下注紀錄完全分離，
-  再建立 draw history。
+  statistics.js：
+  玩家參與期數
   ================================
   */
 
@@ -2056,7 +2123,7 @@ function executeDraw() {
 
   /*
   ================================
-  7. 顯示結算
+  8. 顯示本局玩家結算
   ================================
   */
 
@@ -2067,7 +2134,10 @@ function executeDraw() {
 
   /*
   ================================
-  8. 更新近 10 期
+  9. 更新真正近 10 期
+
+  因為上面已經 recordDraw，
+  所以這裡馬上就能看到本期。
   ================================
   */
 
@@ -2076,7 +2146,7 @@ function executeDraw() {
 
   /*
   ================================
-  9. 結算音效
+  10. 結算音效
   ================================
   */
 
@@ -2092,7 +2162,7 @@ function executeDraw() {
 
   /*
   ================================
-  10. 下一局
+  11. 下一局
   ================================
   */
 
@@ -2657,7 +2727,11 @@ function init() {
 
 
   /*
-  讀取本倍場既有近 10 期
+  讀取真正的本倍場近 10 期
+
+  包含：
+  玩家有下注的期數
+  玩家沒下注的期數
   */
 
   renderRecentRounds();
