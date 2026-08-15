@@ -1,0 +1,1218 @@
+/*
+========================================
+28 GAME LAB
+history.css
+========================================
+*/
+
+
+body {
+  margin: 0;
+
+  min-height: 100vh;
+
+  color: #f5f7fb;
+
+  background:
+    linear-gradient(
+      rgba(6, 11, 20, 0.80),
+      rgba(6, 11, 20, 0.96)
+    ),
+    url("../assets/images/lobby-bg.webp");
+
+  background-size: cover;
+
+  background-position: center;
+
+  background-attachment: fixed;
+}
+
+
+/* ========================================
+   整體容器
+======================================== */
+
+.history-app {
+  width: min(
+    1180px,
+    calc(100% - 30px)
+  );
+
+  margin: 0 auto;
+
+  padding: 22px 0 48px;
+}
+
+
+/* ========================================
+   Header
+======================================== */
+
+.history-header {
+  min-height: 72px;
+
+  padding: 12px 16px;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    auto
+    1fr;
+
+  align-items: center;
+
+  gap: 16px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.10
+    );
+
+  border-radius: 17px;
+
+  background:
+    rgba(
+      11,
+      17,
+      29,
+      0.88
+    );
+
+  box-shadow:
+    0 14px 40px
+    rgba(
+      0,
+      0,
+      0,
+      0.22
+    );
+
+  backdrop-filter: blur(14px);
+
+  -webkit-backdrop-filter: blur(14px);
+}
+
+
+.history-title {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+}
+
+
+.history-title img {
+  width: 32px;
+
+  height: 32px;
+}
+
+
+.history-title h1 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 20px;
+
+  font-weight: 900;
+}
+
+
+.history-title p {
+  margin: 2px 0 0;
+
+  color: #929cad;
+
+  font-size: 10px;
+
+  letter-spacing: 0.08em;
+}
+
+
+.history-header > :last-child {
+  justify-self: end;
+}
+
+
+/* ========================================
+   Header buttons
+======================================== */
+
+.icon-button {
+  min-height: 44px;
+
+  padding: 10px 13px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.10
+    );
+
+  border-radius: 11px;
+
+  color: #f2f4f8;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.05
+    );
+
+  cursor: pointer;
+
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
+
+
+.icon-button:hover {
+  transform: translateY(-1px);
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.09
+    );
+
+  border-color:
+    rgba(
+      96,
+      165,
+      250,
+      0.42
+    );
+}
+
+
+.icon-button img {
+  width: 20px;
+
+  height: 20px;
+}
+
+
+.sound-button {
+  width: 44px;
+
+  padding: 10px;
+}
+
+
+/* ========================================
+   Hero
+======================================== */
+
+.history-hero {
+  min-height: 210px;
+
+  margin-top: 20px;
+
+  padding: 30px 32px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 30px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.10
+    );
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(
+        8,
+        14,
+        26,
+        0.95
+      ),
+      rgba(
+        8,
+        14,
+        26,
+        0.55
+      )
+    );
+
+  box-shadow:
+    0 18px 48px
+    rgba(
+      0,
+      0,
+      0,
+      0.24
+    );
+}
+
+
+.hero-label {
+  color: #93c5fd;
+
+  font-size: 11px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.10em;
+}
+
+
+.history-hero h2 {
+  margin: 9px 0 0;
+
+  color: #ffffff;
+
+  font-size: clamp(
+    30px,
+    5vw,
+    44px
+  );
+
+  font-weight: 900;
+}
+
+
+.history-hero p {
+  margin: 12px 0 0;
+
+  color: #aeb7c5;
+
+  line-height: 1.7;
+}
+
+
+.hero-date {
+  min-width: 170px;
+
+  padding: 16px 18px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.09
+    );
+
+  border-radius: 13px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.05
+    );
+}
+
+
+.hero-date span {
+  color: #909aaa;
+
+  font-size: 11px;
+}
+
+
+.hero-date strong {
+  color: #ffffff;
+
+  font-size: 18px;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ========================================
+   Section
+======================================== */
+
+.history-section {
+  margin-top: 20px;
+
+  padding: 24px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.09
+    );
+
+  border-radius: 18px;
+
+  background:
+    rgba(
+      14,
+      21,
+      35,
+      0.90
+    );
+
+  box-shadow:
+    0 14px 36px
+    rgba(
+      0,
+      0,
+      0,
+      0.18
+    );
+}
+
+
+.section-heading {
+  margin-bottom: 18px;
+}
+
+
+.section-heading h2 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 20px;
+
+  font-weight: 900;
+}
+
+
+.section-heading p {
+  margin: 5px 0 0;
+
+  color: #929cad;
+
+  font-size: 12px;
+}
+
+
+/* ========================================
+   今日總覽
+======================================== */
+
+.summary-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 12px;
+}
+
+
+.summary-card {
+  min-height: 118px;
+
+  padding: 18px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(
+        45,
+        57,
+        80,
+        0.55
+      ),
+      rgba(
+        23,
+        31,
+        47,
+        0.82
+      )
+    );
+}
+
+
+.summary-card.important {
+  border-color:
+    rgba(
+      96,
+      165,
+      250,
+      0.28
+    );
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(
+        30,
+        64,
+        175,
+        0.18
+      ),
+      rgba(
+        23,
+        31,
+        47,
+        0.84
+      )
+    );
+}
+
+
+.summary-label {
+  color: #99a4b5;
+
+  font-size: 12px;
+}
+
+
+.summary-value {
+  color: #ffffff;
+
+  font-size: 28px;
+
+  font-weight: 900;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ========================================
+   結算結果統計
+======================================== */
+
+.result-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 12px;
+}
+
+
+.result-card {
+  min-height: 145px;
+
+  padding: 19px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 5px;
+
+  border-radius: 14px;
+
+  text-align: center;
+}
+
+
+.result-card span {
+  font-size: 11px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.10em;
+}
+
+
+.result-card strong {
+  font-size: 34px;
+
+  font-weight: 900;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+.result-card p {
+  margin: 0;
+
+  color: #9da7b6;
+
+  font-size: 11px;
+}
+
+
+.win-card {
+  border:
+    1px solid rgba(
+      74,
+      222,
+      128,
+      0.25
+    );
+
+  background:
+    rgba(
+      22,
+      101,
+      52,
+      0.14
+    );
+}
+
+
+.win-card span,
+.win-card strong {
+  color: #86efac;
+}
+
+
+.lose-card {
+  border:
+    1px solid rgba(
+      248,
+      113,
+      113,
+      0.25
+    );
+
+  background:
+    rgba(
+      127,
+      29,
+      29,
+      0.14
+    );
+}
+
+
+.lose-card span,
+.lose-card strong {
+  color: #fca5a5;
+}
+
+
+.refund-card {
+  border:
+    1px solid rgba(
+      250,
+      204,
+      21,
+      0.24
+    );
+
+  background:
+    rgba(
+      113,
+      63,
+      18,
+      0.14
+    );
+}
+
+
+.refund-card span,
+.refund-card strong {
+  color: #fde68a;
+}
+
+
+/* ========================================
+   各倍場
+======================================== */
+
+.room-stats-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 12px;
+}
+
+
+.room-stat-card {
+  overflow: hidden;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
+
+  border-radius: 14px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.035
+    );
+}
+
+
+.room-stat-header {
+  padding: 16px;
+
+  display: flex;
+
+  align-items: baseline;
+
+  justify-content: space-between;
+
+  gap: 10px;
+
+  border-bottom:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.07
+    );
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.04
+    );
+}
+
+
+.room-stat-header strong {
+  color: #ffd966;
+
+  font-size: 25px;
+
+  font-weight: 900;
+}
+
+
+.room-stat-header span {
+  color: #9ba6b7;
+
+  font-size: 11px;
+}
+
+
+.room-stat-content {
+  padding: 10px 16px 14px;
+}
+
+
+.stat-row {
+  min-height: 42px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  border-bottom:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.06
+    );
+}
+
+
+.stat-row:last-child {
+  border-bottom: 0;
+}
+
+
+.stat-row span {
+  color: #949faf;
+
+  font-size: 11px;
+}
+
+
+.stat-row strong {
+  color: #ffffff;
+
+  font-size: 13px;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ========================================
+   反水
+======================================== */
+
+.rebate-section {
+  border-color:
+    rgba(
+      96,
+      165,
+      250,
+      0.16
+    );
+}
+
+
+.rebate-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 11px;
+}
+
+
+.rebate-stat {
+  min-height: 105px;
+
+  padding: 16px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.07
+    );
+
+  border-radius: 12px;
+
+  background:
+    rgba(
+      96,
+      165,
+      250,
+      0.055
+    );
+}
+
+
+.rebate-stat span {
+  color: #96a3b5;
+
+  font-size: 11px;
+}
+
+
+.rebate-stat strong {
+  color: #ffffff;
+
+  font-size: 21px;
+
+  font-weight: 900;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+.rebate-preview {
+  margin-top: 14px;
+
+  padding: 14px 16px;
+
+  border-radius: 11px;
+
+  color: #aeb8c7;
+
+  background:
+    rgba(
+      59,
+      130,
+      246,
+      0.08
+    );
+
+  font-size: 12px;
+
+  line-height: 1.65;
+}
+
+
+/* ========================================
+   History table
+======================================== */
+
+.history-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+
+.history-table {
+  width: 100%;
+
+  min-width: 720px;
+
+  border-collapse: collapse;
+}
+
+
+.history-table th,
+.history-table td {
+  padding: 13px 15px;
+
+  border-bottom:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.07
+    );
+
+  text-align: left;
+
+  white-space: nowrap;
+}
+
+
+.history-table th {
+  color: #9ca7b8;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.04
+    );
+
+  font-size: 11px;
+
+  font-weight: 800;
+}
+
+
+.history-table td {
+  color: #e4e9f0;
+
+  font-size: 12px;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+.history-table tbody tr {
+  transition:
+    background 0.16s ease;
+}
+
+
+.history-table tbody tr:hover {
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.025
+    );
+}
+
+
+.empty-history {
+  height: 110px;
+
+  color: #7f8999 !important;
+
+  text-align: center !important;
+}
+
+
+/* ========================================
+   盈虧動態色
+======================================== */
+
+.profit-positive {
+  color: #86efac !important;
+}
+
+
+.profit-negative {
+  color: #fca5a5 !important;
+}
+
+
+.profit-zero {
+  color: #aab4c2 !important;
+}
+
+
+/* ========================================
+   反水狀態
+======================================== */
+
+.rebate-eligible {
+  color: #86efac !important;
+}
+
+
+.rebate-not-eligible {
+  color: #9ca3af !important;
+}
+
+
+.rebate-processed {
+  color: #93c5fd !important;
+}
+
+
+/* ========================================
+   底部說明
+======================================== */
+
+.history-note {
+  margin-top: 20px;
+
+  padding: 15px 17px;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  border:
+    1px solid rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
+
+  border-radius: 13px;
+
+  background:
+    rgba(
+      10,
+      16,
+      28,
+      0.76
+    );
+}
+
+
+.history-note img {
+  width: 18px;
+
+  height: 18px;
+
+  margin-top: 2px;
+
+  opacity: 0.75;
+}
+
+
+.history-note p {
+  margin: 0;
+
+  color: #929cab;
+
+  font-size: 11px;
+
+  line-height: 1.65;
+}
+
+
+/* ========================================
+   Tablet
+======================================== */
+
+@media (
+  max-width: 1000px
+) {
+
+  .summary-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+
+  .room-stats-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+
+  .rebate-summary {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+
+/* ========================================
+   小平板
+======================================== */
+
+@media (
+  max-width: 760px
+) {
+
+  .history-hero {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+
+  .hero-date {
+    width: 100%;
+
+    min-width: 0;
+  }
+
+
+  .result-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+}
+
+
+/* ========================================
+   Mobile
+======================================== */
+
+@media (
+  max-width: 600px
+) {
+
+  .history-app {
+    width:
+      calc(100% - 18px);
+
+    padding-top: 10px;
+  }
+
+
+  .history-header {
+    grid-template-columns:
+      auto
+      1fr
+      auto;
+  }
+
+
+  .history-header .icon-button span {
+    display: none;
+  }
+
+
+  .history-title h1 {
+    font-size: 17px;
+  }
+
+
+  .history-title img {
+    width: 27px;
+
+    height: 27px;
+  }
+
+
+  .history-hero {
+    min-height: 190px;
+
+    padding: 23px;
+  }
+
+
+  .history-hero h2 {
+    font-size: 30px;
+  }
+
+
+  .history-section {
+    padding: 18px;
+  }
+
+
+  .summary-grid,
+  .room-stats-grid,
+  .rebate-summary {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .summary-card {
+    min-height: 95px;
+  }
+
+
+  .summary-value {
+    font-size: 24px;
+  }
+
+
+  .room-stat-card {
+    width: 100%;
+  }
+
+}
