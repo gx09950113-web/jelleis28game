@@ -15,13 +15,10 @@ pages/index.js
 - 顯示反水資訊
 - 大廳 BGM
 - 音效開關
+- 遊戲紀錄入口
+- 規則頁入口
 - 倍場入口
 - 重置本機資料
-
-不負責：
-- 開獎
-- 下注
-- 遊戲結算
 ========================================
 */
 
@@ -96,17 +93,15 @@ const loginRewardSound =
 
 
 /*
-大廳 BGM 設定
+========================================
+音量
+========================================
 */
 
 lobbyBgm.loop = true;
 
 lobbyBgm.volume = 0.35;
 
-
-/*
-UI 音效音量
-*/
 
 clickSound.volume = 0.5;
 
@@ -138,7 +133,9 @@ DOM Helper
 ========================================
 */
 
-function getElement(id) {
+function getElement(
+  id
+) {
 
   return document.getElementById(
     id
@@ -153,7 +150,9 @@ function getElement(id) {
 ========================================
 */
 
-function playSound(audio) {
+function playSound(
+  audio
+) {
 
   if (
     !player
@@ -260,11 +259,6 @@ function showToast(
     );
 
 
-  /*
-  如果目前 HTML 沒有 Toast，
-  就 fallback 到 console。
-  */
-
   if (
     !toast
     ||
@@ -354,13 +348,6 @@ function renderPlayer() {
 
   if (streak) {
 
-    /*
-    如果剛領完第七天，
-    player.loginStreak 已經變 0。
-
-    但首頁當下仍然可以顯示 7 / 7。
-    */
-
     const visibleStreak =
       loginReward?.loginDay === 7
 
@@ -434,17 +421,13 @@ function renderLoginDays() {
   }
 
 
-  container.innerHTML = "";
+  container.innerHTML =
+    "";
 
 
   let progress =
     player.loginStreak;
 
-
-  /*
-  剛領完第七天時，
-  仍顯示七格完成。
-  */
 
   if (
     loginReward?.loginDay
@@ -462,7 +445,9 @@ function renderLoginDays() {
 
   for (
     let day = 1;
-    day <= ECONOMY_CONFIG.loginStreakDays;
+    day <=
+    ECONOMY_CONFIG
+      .loginStreakDays;
     day++
   ) {
 
@@ -476,10 +461,6 @@ function renderLoginDays() {
       "day-card";
 
 
-    /*
-    已完成
-    */
-
     if (
       day <= progress
     ) {
@@ -491,16 +472,13 @@ function renderLoginDays() {
     }
 
 
-    /*
-    今日位置
-    */
-
     if (
       day === progress
       &&
       progress
       <
-      ECONOMY_CONFIG.loginStreakDays
+      ECONOMY_CONFIG
+        .loginStreakDays
     ) {
 
       card.classList.add(
@@ -509,10 +487,6 @@ function renderLoginDays() {
 
     }
 
-
-    /*
-    第七天
-    */
 
     if (
       day
@@ -620,7 +594,7 @@ function announceLoginReward() {
 
 
   /*
-  七日獎勵
+  七日登入
   */
 
   if (
@@ -683,10 +657,6 @@ function announceRebate() {
   }
 
 
-  /*
-  沒有昨日統計
-  */
-
   if (
     rebateResult.reason
     ===
@@ -698,11 +668,6 @@ function announceRebate() {
   }
 
 
-  /*
-  已處理過
-  不重複提示。
-  */
-
   if (
     rebateResult.reason
     ===
@@ -713,10 +678,6 @@ function announceRebate() {
 
   }
 
-
-  /*
-  沒達標
-  */
 
   if (
     !rebateResult.eligible
@@ -765,16 +726,12 @@ function announceRebate() {
     )} 代幣。`;
 
 
-  /*
-  如果觸發虧損反水上限
-  */
-
   if (
     rebateResult.capped
   ) {
 
     message +=
-      ` 已套用虧損反水上限。`;
+      " 已套用虧損反水上限。";
 
   }
 
@@ -790,7 +747,7 @@ function announceRebate() {
 
 /*
 ========================================
-房間卡片資料
+房間卡片
 ========================================
 */
 
@@ -822,14 +779,6 @@ function renderRoomCards() {
 
         }
 
-
-        /*
-        如果 HTML 有對應 room card，
-        可以自動放背景圖。
-
-        預期結構：
-        <article class="room-card">
-        */
 
         const card =
           button.closest(
@@ -916,10 +865,6 @@ function setupRoomButtons() {
             );
 
 
-            /*
-            避免 BGM 與進場音重疊太多
-            */
-
             lobbyBgm.pause();
 
 
@@ -927,11 +872,6 @@ function setupRoomButtons() {
               enterRoomSound
             );
 
-
-            /*
-            稍微留一點時間
-            讓進場音效播放。
-            */
 
             setTimeout(
               () => {
@@ -957,6 +897,104 @@ function setupRoomButtons() {
 
 /*
 ========================================
+遊戲紀錄按鈕
+========================================
+*/
+
+function setupHistoryButton() {
+
+  const button =
+    getElement(
+      "history-button"
+    );
+
+
+  if (!button) {
+
+    return;
+
+  }
+
+
+  button.addEventListener(
+    "click",
+    () => {
+
+      playSound(
+        clickSound
+      );
+
+
+      stopLobbyBgm();
+
+
+      setTimeout(
+        () => {
+
+          window.location.href =
+            "./history.html";
+
+        },
+        120
+      );
+
+    }
+  );
+
+}
+
+
+/*
+========================================
+規則頁按鈕
+========================================
+*/
+
+function setupRulesButton() {
+
+  const button =
+    getElement(
+      "rules-button"
+    );
+
+
+  if (!button) {
+
+    return;
+
+  }
+
+
+  button.addEventListener(
+    "click",
+    () => {
+
+      playSound(
+        clickSound
+      );
+
+
+      stopLobbyBgm();
+
+
+      setTimeout(
+        () => {
+
+          window.location.href =
+            "./rules.html";
+
+        },
+        120
+      );
+
+    }
+  );
+
+}
+
+
+/*
+========================================
 聲音按鈕
 ========================================
 */
@@ -968,11 +1006,6 @@ function setupSoundToggle() {
       "sound-toggle"
     );
 
-
-  /*
-  如果首頁還沒放音量按鈕，
-  不會報錯。
-  */
 
   if (!button) {
 
@@ -1026,11 +1059,6 @@ function setupSoundToggle() {
 
     () => {
 
-      /*
-      如果目前是開啟狀態，
-      先播放 click。
-      */
-
       if (
         player.soundEnabled
       ) {
@@ -1081,13 +1109,6 @@ function setupSoundToggle() {
 /*
 ========================================
 瀏覽器自動播放限制
-
-多數瀏覽器不允許頁面
-完全沒有互動就開始播放音樂。
-
-因此：
-首次 click / touch / keydown
-之後才啟動 BGM。
 ========================================
 */
 
@@ -1150,12 +1171,11 @@ function setupBgmAutoplayUnlock() {
 
 /*
 ========================================
-一般按鈕 Click Sound
+全域 Click Sound
 
-避免：
-.room-button
-#sound-toggle
-被重複播放。
+避免 data-room、
+history、rules、
+sound-toggle 重複播放。
 ========================================
 */
 
@@ -1176,6 +1196,14 @@ function setupGlobalClickSounds() {
           button.id
           ===
           "sound-toggle"
+          ||
+          button.id
+          ===
+          "history-button"
+          ||
+          button.id
+          ===
+          "rules-button"
         ) {
 
           return;
@@ -1196,40 +1224,6 @@ function setupGlobalClickSounds() {
 
       }
     );
-
-}
-
-
-/*
-========================================
-規則頁
-========================================
-*/
-
-function setupRulesButton() {
-
-  const button =
-    getElement(
-      "rules-button"
-    );
-
-
-  if (!button) {
-
-    return;
-
-  }
-
-
-  button.addEventListener(
-    "click",
-    () => {
-
-      window.location.href =
-        "./rules.html";
-
-    }
-  );
 
 }
 
@@ -1291,7 +1285,7 @@ function setupResetButton() {
 
 /*
 ========================================
-頁面離開時停止 BGM
+頁面 Lifecycle
 ========================================
 */
 
@@ -1306,13 +1300,6 @@ function setupPageLifecycle() {
     }
   );
 
-
-  /*
-  從上一頁返回時，
-  某些瀏覽器會使用 bfcache。
-
-  回到首頁後重新讀玩家資料。
-  */
 
   window.addEventListener(
     "pageshow",
@@ -1361,8 +1348,7 @@ function init() {
 
   /*
   ================================
-  1.
-  初始化玩家 + 每日登入
+  1. 初始化玩家
   ================================
   */
 
@@ -1380,11 +1366,7 @@ function init() {
 
   /*
   ================================
-  2.
-  處理昨日反水
-
-  注意：
-  這一步可能修改玩家錢包。
+  2. 處理昨日反水
   ================================
   */
 
@@ -1394,10 +1376,7 @@ function init() {
 
   /*
   ================================
-  3.
-  反水發放後重新讀取玩家
-
-  避免畫面拿到舊 balance。
+  3. 重新讀取玩家
   ================================
   */
 
@@ -1416,10 +1395,7 @@ function init() {
 
 
   /*
-  舊玩家資料可能還沒有
-  soundEnabled。
-
-  做版本兼容。
+  舊版資料相容
   */
 
   if (
@@ -1441,8 +1417,7 @@ function init() {
 
   /*
   ================================
-  4.
-  渲染 UI
+  4. 渲染 UI
   ================================
   */
 
@@ -1455,18 +1430,19 @@ function init() {
 
   /*
   ================================
-  5.
-  建立互動
+  5. 建立互動
   ================================
   */
 
   setupRoomButtons();
 
+  setupHistoryButton();
+
+  setupRulesButton();
+
   setupSoundToggle();
 
   setupGlobalClickSounds();
-
-  setupRulesButton();
 
   setupResetButton();
 
@@ -1477,12 +1453,7 @@ function init() {
 
   /*
   ================================
-  6.
-  顯示登入 / 反水
-
-  先登入獎勵，
-  反水稍後顯示，
-  避免兩個 Toast 互相蓋掉。
+  6. 顯示登入與反水
   ================================
   */
 
